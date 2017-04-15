@@ -1,0 +1,23 @@
+#ignore everything
+*
+
+#but...
+!.gitignore
+!README.md
+
+!/src
+src/*
+!/src/**/*.m
+!/src/**/*.mat
+
+!/datasets
+datatsets/*
+!/datasets/**/*.m
+!/datasets/**/*.mat
+
+
+!/libsvm
+libsvm/*
+
+!/sparseBayes
+sparseBayes/*
