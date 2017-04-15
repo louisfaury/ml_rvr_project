@@ -11,7 +11,7 @@
 \usepackage{hyperref}
 \usepackage[latin1]{inputenc}
 \usepackage{lipsum}
-
+\usepackage{coolMath}
 \title{Relevance Vector Machine for regression and comparaison with the SVR}
 \author{
 	\IEEEauthorblockN{Hadrien Hendrikx}
@@ -53,7 +53,38 @@
 	}
 	\section{Theoretical background}
 	{
-
+		\subsection{Support Vector machine for Regression}
+		{
+			The Support Vector machine for Regression (SVR) extends the SVM method for regression tasks. Let us first consider the simple linear regression case for a dataset $\{X,\mathbf{t}\} = \{ (x_1,\hdots,x_N)^T, (t_1,\hdots,t_n)^T\}$, where we minimize a regularized error function given by : 
+			\begin{equation}
+				E(w) = \frac{1}{2}\sum_{n=1}^N\left\{w^T\phi(x_n) - t_n\right\}^2 + \frac{\lambda}{2}\lVert w \rVert ^2
+			\end{equation}
+			To obtain sparse solution, the quadratic term is replaced by a $\eps$-\emph{insensitive error function} (see \cite{vapnik1995nature}) denoted $E_\eps(\cdot)$ with : 
+			\begin{equation}
+				\label{eq::loss}
+				E_\eps(y(x)-t) = \left\{
+								\begin{aligned}
+								&0, \quad &\text{ if } \vert y(x)-t\vert < \eps\\
+								& \vert y(x)-t\vert < \eps \quad &\text{otherwise}  
+								\end{aligned}\right.
+			\end{equation}
+			Therefore, the quantity to be minimized can be expressed as : 
+			\begin{equation}
+				C\sum_{n=1}^N E_\eps(w^T\phi(x_n)-t) + \frac{1}{2}\lVert w \rVert ^2
+			\end{equation}
+			where $C$ is a regularization parameter. 
+			\newline 
+			As for the SVM, one can introduce \emph{slack variables} in order to transform this optimization program into a quadratic programming problem (quadratic objective, linear constraints). Once the problem solved, predictions are made using : 
+			\begin{equation}
+				y(x) = \sum_{n=1}^N (a_n - \hat{a}_n)k(x,x_n) + b
+			\end{equation}
+			where we introduced the kernel $k(x,x') = \phi(x)^T\phi(x')$. The coefficients $\{a_n\}$ and $\{\hat{a}_n\}$ actually are Lagrange multipliers for the QP problem, and provide a \emph{sparse} solutions in the data-points. The \emph{support vectors} (data point used for predictions) are those for which $a_n \neq 0$ or $\hat{a}_n\neq 0$, in other words those that lie on the boundary or outside of the $\eps$-tube defined by the loss function in equation (\ref{eq::loss}). \newline
+			As for the SVM, onecan adopt a $\nu-SVR$ formulation to have an lower-bound control on the number of retained support vectors. 
+		}
+		\subsection{Relevance Vector machine for Regression}
+		{
+		
+		}
 	}
 	\section{Results}
 	{
@@ -74,5 +105,8 @@
 	{
 
 	}
+	
+	\bibliographystyle{plain}
+ 	 \bibliography{bib_file}
 	
 \end{document}
