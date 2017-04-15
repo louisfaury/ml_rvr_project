@@ -113,13 +113,22 @@
 					\Sigma &= \left(A+\beta \boldsymbol{\phi}^T\boldsymbol{\phi}\right)^{-1}, \qquad A = \text{diag}(\alpha_i)
 				\end{aligned}
 			\end{equation}
-			In a full Bayesian approach, $\alpha$ and $\beta$ are given prior. However, this leads to intractable computations when computing predictions. The use of \emph{empirical Bayes} solves this problem, by approximating $\alpha$ and $\beta$ by their maximum-a-posteriori value (also known as the \emph{evidence approximation}. \newline
+			In a full Bayesian approach, $\alpha$ and $\beta$ are both given prior distributions. However, this leads to intractable computations when computing predictions. The use of \emph{empirical Bayes} solves this problem, by approximating $\alpha$ and $\beta$ by their maximum-a-posteriori value (also known as the \emph{evidence approximation}). \newline
 			As a result of approximation, a proportion of parameters $\alpha_i$ are driven to infinite values, constraining the corresponding weights $w_i$ to have $0$ mean and infinite precision, and hence are set to $0$. The resulting predictions are therefore sparse in data-points, and the inputs $\{x_n\}$ corresponding to non-zero weights are called \emph{relevance vectors}. Once the optimal values $\alpha^*$ and $\beta^*$ found, the predictive distribution over $y$ can therefore be computed using $\alpha^*$ and $\beta^*$. 
 			\newline The sparsity analysis of the RVR leads to a practical algorithm for optimizing the hyper-parameters that has significant speed advantages, and is referred to as \emph{automatic relevance determination}. The full algorithm and its justification can be found in \cite{bishop2006pattern}.
 		}
 		\subsection{Theoretical method comparaison}
 		{
-		
+			\subsubsection{Complexity}
+			{
+				When comparing the SVR's and the RVR's complexity, one must distinguish complexity at training time and at testing time. \newline
+				Training the SVR sums up in solving a large quadratic-programing (QP) problem. A popular approach to do that implies breaking up the initial QP in smaller problems, solvable analytically, and is called \emph{Sequential Minimization Optimization} (SMO). It requires a linear (with respect to the datapoints) amount of memory, and scales between linear and quadratic complexity in the training set size (see \cite{platt1998sequential}). At test time, the complexity is linear in the number of support vectors. \newline
+				Training a RVM involves optimizing a non-convex function. For a model with $M$ basis functions, the RVM requires the inversion of a $M\times M$ matrix, which requires from $O(M^{2.7})$ to $O(M^{3})$, which is as we just saw larger than the SVR's cost. However, parameters are determined automatically and in one run when training a RVR, while the hyper-parameters typically need several runs (f-fold cross-validation) to be estimated. At testing time, the RVR's complexity grows linearly with the number of relevance vectors.  
+			}
+			\subsection{Performance}
+			{
+				We just named one of the major pros of using RVR - there is no need for using held-out methods to estimate hyper-parameters, as they are automatically determined through automatic relevance detection (expect for parametric basis functions). Also, it has been shown (\cite{platt1998sequential}), \cite{bishop2006pattern}) that RVR leads to \emph{sparser solutions, without loss of generalization abilities} (on the contrary, the RVR usually performs better than the SVR). We will try to observe this observations in the experiments derived hereinafter.
+			}
 		}
 	}
 	\section{Results}
