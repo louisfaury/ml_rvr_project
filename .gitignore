@@ -22,4 +22,4 @@ libsvm/*
 !/sparseBayes
 sparseBayes/*
 
-!report/.gitignore
+!/report/.gitignore
