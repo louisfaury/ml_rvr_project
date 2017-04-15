@@ -79,9 +79,45 @@
 				y(x) = \sum_{n=1}^N (a_n - \hat{a}_n)k(x,x_n) + b
 			\end{equation}
 			where we introduced the kernel $k(x,x') = \phi(x)^T\phi(x')$. The coefficients $\{a_n\}$ and $\{\hat{a}_n\}$ actually are Lagrange multipliers for the QP problem, and provide a \emph{sparse} solutions in the data-points. The \emph{support vectors} (data point used for predictions) are those for which $a_n \neq 0$ or $\hat{a}_n\neq 0$, in other words those that lie on the boundary or outside of the $\eps$-tube defined by the loss function in equation (\ref{eq::loss}). \newline
-			As for the SVM, onecan adopt a $\nu-SVR$ formulation to have an lower-bound control on the number of retained support vectors. 
+			As for the SVM, one can adopt a $\nu$-SVR formulation to have an lower-bound control on the number of retained support vectors. 
 		}
 		\subsection{Relevance Vector machine for Regression}
+		{
+			The SVR therefore provides a useful tool for obtaining sparse regression machine. However, it suffers from a \emph{number of limitations}, such as an output representation as decision rather than posterior probability, the need to estimate hyper-parameters (kernel width, penalization parameter) via \emph{held-out methods} (like cross-validation), or the need for the kernel to be a Mercer kernel type (positive definite). 
+			\newline
+			The Relevance Vector Machine for regression is a \emph{Bayesian sparse kernel technique} that shares many of the SVR's characteristics while avoiding its limitations. It instantiates a model intended to mirror the structure of the SVR : 
+			\begin{equation}
+				y(x) = \sum_{n=1}^{N+1}w_nk(x,x_n)
+			\end{equation}
+			where the bias $b$ is included in the predictor $w$ and $k(\cdot,\cdot)$ is an arbitrary kernel (not necessarily positive definite). Assuming i.i.d data sample with Gaussian noise of precision $\beta$, the likelihood writes : 
+			\begin{equation}
+				\condp{\mathbf{t}}{X,w,\beta} = \prod_{n=1}^N \normalDb{t_n}{y(x_n)}{\beta}
+			\end{equation}
+			The predictor $w$ is given a centered Gaussian prior distribution :
+			\begin{equation}
+				\condp{w}{\alpha} = \prod_{i=1}^{N+1} \normalDb{w}{0}{\alpha_i^{-1}}
+			\end{equation}
+			introducing a separate precision parameter $\alpha_i$ for each weight parameter $w_i$. 
+			\newline 
+			This leads to a Gaussian posterior distribution over $w$ : 
+			\begin{equation}
+				\begin{aligned}
+					\condp{w}{\mathbf{t},X,\alpha,\beta} &= \condp{\mathbf{t}}{w,X,\beta}\condp{w}{\alpha}\\
+												&= \normalDb{w}{m}{\Sigma}
+				\end{aligned}
+			\end{equation}
+			where 
+			\begin{equation}
+				\begin{aligned}
+					m &= \beta \Sigma \boldsymbol{\phi}^T t\\
+					\Sigma &= \left(A+\beta \boldsymbol{\phi}^T\boldsymbol{\phi}\right)^{-1}, \qquad A = \text{diag}(\alpha_i)
+				\end{aligned}
+			\end{equation}
+			In a full Bayesian approach, $\alpha$ and $\beta$ are given prior. However, this leads to intractable computations when computing predictions. The use of \emph{empirical Bayes} solves this problem, by approximating $\alpha$ and $\beta$ by their maximum-a-posteriori value (also known as the \emph{evidence approximation}. \newline
+			As a result of approximation, a proportion of parameters $\alpha_i$ are driven to infinite values, constraining the corresponding weights $w_i$ to have $0$ mean and infinite precision, and hence are set to $0$. The resulting predictions are therefore sparse in data-points, and the inputs $\{x_n\}$ corresponding to non-zero weights are called \emph{relevance vectors}. Once the optimal values $\alpha^*$ and $\beta^*$ found, the predictive distribution over $y$ can therefore be computed using $\alpha^*$ and $\beta^*$. 
+			\newline The sparsity analysis of the RVR leads to a practical algorithm for optimizing the hyper-parameters that has significant speed advantages, and is referred to as \emph{automatic relevance determination}. The full algorithm and its justification can be found in \cite{bishop2006pattern}.
+		}
+		\subsection{Theoretical method comparaison}
 		{
 		
 		}
