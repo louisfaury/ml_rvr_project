@@ -21,3 +21,8 @@ libsvm/*
 
 !/sparseBayes
 sparseBayes/*
+
+report/*
+!/report/*.pdf
+!/report/*.bib
+!/report/*.tex
