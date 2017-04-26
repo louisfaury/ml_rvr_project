@@ -16,13 +16,13 @@ clear;
 %% loading dataset
 load('../datasets/dataset_sinc');
 
-xDataset    = Dataset_1.inputs;
-yDataset    = Dataset_1.outputs;
-yRefDataset = Dataset_1.referenceOutputs;
-func        = str2func(Dataset_1.function);
-xMin        = Dataset_1.minInput;
-xMax        = Dataset_1.maxInput;
-N           = Dataset_1.numPoints;
+xDataset    = Dataset.inputs;
+yDataset    = Dataset.outputs;
+yRefDataset = Dataset.referenceOutputs;
+func        = str2func(Dataset.function);
+xMin        = Dataset.minInput;
+xMax        = Dataset.maxInput;
+N           = Dataset.numPoints;
 
 %% retrieving reference function
 x = xMin:0.01:xMax;
