@@ -19,12 +19,19 @@ name = 'sinc'; % 'sinc', 'online_views'
 load(strcat('dataset_',name,'.mat')); 
 
 %% call ml functions
+% Define kernel, hp
+% opt = struct('kernel,'','width',) ... 
 % First round, vizu 
     % 2. call baseline functions for svr and rvr -> deux fonctions 
     %                                               params : dataset, options (hp) 
     %                                               output : plot handle
     % 3. post process (plots, hp), compute generalization 
     
+    % [index_of_relevance, coeff_of_relevance, iterations_number,
+    % learning_curve(?)] = my_ml_function(dataset,options)
+    % 
+    
+    % 4. plot !
  
 %% Cross-validation, evaluative plots 
 % Cross-validation 
