@@ -69,8 +69,8 @@ value6 = min(x);
 field7 = 'maxInput';
 value7 = max(x);
 
-Dataset_1 = struct(field1, value1, field2, value2, field3, value3,...
+Dataset = struct(field1, value1, field2, value2, field3, value3,...
                     field4, value4, field5, value5, field6, value6,...
                     field7, value7);
 
-save('../datasets/dataset_sinc', 'Dataset_1');
+save('../datasets/dataset_sinc', 'Dataset');
