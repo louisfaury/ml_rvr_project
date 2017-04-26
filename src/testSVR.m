@@ -3,7 +3,7 @@ clear;
 close all;
 
 %% adding library to path
-addpath(genpath('../libsvm'));
+addpath(genpath('../lib/libsvm'));
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -14,7 +14,7 @@ addpath(genpath('../libsvm'));
 clear;
 
 %% loading dataset
-load('../datasets/Dataset_1');
+load('../datasets/dataset_sinc');
 
 xDataset    = Dataset_1.inputs;
 yDataset    = Dataset_1.outputs;
