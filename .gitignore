@@ -15,13 +15,6 @@ datatsets/*
 !/datasets/**/*.m
 !/datasets/**/*.mat
 
-
-!/libsvm
-libsvm/*
-
-!/sparseBayes
-sparseBayes/*
-
 !/report
 report/*
 !/report/*.pdf
