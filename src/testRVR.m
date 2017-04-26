@@ -29,7 +29,7 @@ y = func(x);
 
 %% basis functions generation (gaussian kernel)
 c = xDataset;
-basisWidth = 0.5;
+basisWidth = 0.7;
 basis = exp(-distSquared(xDataset,c)/(basisWidth^2));
 
 %% train model

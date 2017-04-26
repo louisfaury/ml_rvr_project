@@ -9,9 +9,9 @@ close all;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Constants definition
-n               = 50;       % Number of datapoints 
-variance        = 0.002;    % Gaussian noise variance
-pOutliers       = 0.02;     % Proportion of outliers
+n               = 100;       % Number of datapoints 
+variance        = 0.004;    % Gaussian noise variance
+pOutliers       = 0.1;     % Proportion of outliers
 
 %% Generating real function
 % X interval
