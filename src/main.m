@@ -20,7 +20,20 @@ load(strcat('dataset_',name,'.mat'));
 
 %% call ml functions
 % Define kernel, hp
-% opt = struct('kernel,'','width',) ... 
+kernelstr = 'gaussian'; % 'gaussian', 'poly2' 
+switch kernelstr
+    case 'gaussian'
+        width = 0.3;
+        params = struct('width',width);
+    case 'poly2'
+        params = [];
+    otherwise
+        error('Unknown kernel string form');
+end
+kernel = struct('name',kernelstr,'params',params);
+% Call SVR 
+
+
 % First round, vizu 
     % 2. call baseline functions for svr and rvr -> deux fonctions 
     %                                               params : dataset, options (hp) 
