@@ -1,5 +1,5 @@
 %% Advanced Machine Learning Coding Project
-% \brief : Main script for the Relevance Vector Machine Project
+% \brief  : Main script for the Relevance Vector Machine Project
 % \author : Gregoire Gallois-Montbrun
 %           Hadrien Hendrix
 %           Louis Faury
@@ -18,20 +18,39 @@ addpath(genpath('../datasets'));
 name = 'sinc'; % 'sinc', 'online_views'
 load(strcat('dataset_',name,'.mat')); 
 
-%% call ml functions
+%% Support Vector Regression 
 % Define kernel, hp
-kernelstr = 'gaussian'; % 'gaussian', 'poly2' 
+kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
 switch kernelstr
-    case 'gaussian'
-        width = 0.3;
+    case 'rbf'
+        width = 2;
         params = struct('width',width);
-    case 'poly2'
-        params = [];
+    case 'polynomial'
+        degree = 2;
+        params = struct('degree',degree);
     otherwise
-        error('Unknown kernel string form');
+        params = [];
 end
 kernel = struct('name',kernelstr,'params',params);
-% Call SVR 
+% defines svr type
+type = 'C'; % 'C', 'nu'
+switch type
+    case 'C'
+        C = 100;
+        eps = 0.3;
+        params = struct('C',C,'eps',eps);
+    case 'nu'
+        C = 1;
+        nu = 0.5;
+        params = struct('C',C,'nu',nu);
+    otherwise
+        error('Unknown SVR type');
+end
+type = struct('type',type,'params',params);
+% call SVR 
+plot_flag = 1;
+model = svr(Dataset,kernel,type,plot_flag);
+
 
 
 % First round, vizu 
@@ -52,3 +71,11 @@ kernel = struct('name',kernelstr,'params',params);
     %           params : f-fold and training test ratio 
     %           output : metric statisitics 
     
+
+    
+    
+    
+%% IDEAS : 
+% -SVR : try to 'impose' through nu-svr the same number of RV as in RVM to compare performance at equel level of sparsity  
+% - General : before doing cross-validation, compare accuracy on full
+% training sets ? 
