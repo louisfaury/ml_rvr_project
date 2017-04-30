@@ -25,7 +25,7 @@ switch m.type
     case 'C'
         m_str = strcat('-s 3 -c',{' '},num2str(m.params.C),' -p',{' '},num2str(m.params.eps));
     case 'nu'
-        m_str = strcat('-s 4-c',{' '},num2str(m.params.C),'-n',{' '},num2str(m.params.nu));
+        m_str = strcat('-s 4 -c',{' '},num2str(m.params.C),' -n',{' '},num2str(m.params.nu));
     otherwise 
         error('Unknown SVR method');
 end
@@ -69,7 +69,7 @@ if (f)
     xlabel('Input')
     ylabel('Output')
     legend([p1,p2,p3,p4],{'Support vectors', 'Datapoints','Target function', 'Modeled function'});
-    title('Result of SVR for dataset 1')
+    title(strcat('Result of SVR for dataset ',{' '}, ds.name))
 end
 
 end

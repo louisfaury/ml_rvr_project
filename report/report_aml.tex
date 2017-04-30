@@ -59,7 +59,7 @@
 			\begin{equation}
 				E(w) = \frac{1}{2}\sum_{n=1}^N\left\{w^T\phi(x_n) - t_n\right\}^2 + \frac{\lambda}{2}\lVert w \rVert ^2
 			\end{equation}
-			To obtain sparse solution, the quadratic term is replaced by a $\eps$-\emph{insensitive error function} (see \cite{vapnik1995nature}) denoted $E_\eps(\cdot)$ with : 
+			To obtain sparse solution, the quadratic term is replaced by an $\eps$-\emph{insensitive error function} (see \cite{vapnik1995nature}) denoted $E_\eps(\cdot)$ with : 
 			\begin{equation}
 				\label{eq::loss}
 				E_\eps(y(x)-t) = \left\{
@@ -70,16 +70,16 @@
 			\end{equation}
 			Therefore, the quantity to be minimized can be expressed as : 
 			\begin{equation}
-				C\sum_{n=1}^N E_\eps(w^T\phi(x_n)-t) + \frac{1}{2}\lVert w \rVert ^2
+				J(w) = C\sum_{n=1}^N E_\eps(w^T\phi(x_n)-t_n) + \frac{1}{2}\lVert w \rVert ^2
 			\end{equation}
 			where $C$ is a regularization parameter. 
 			\newline 
-			As for the SVM, one can introduce \emph{slack variables} in order to transform this optimization program into a quadratic programming problem (quadratic objective, linear constraints). Once the problem solved, predictions are made using : 
+			As for the SVM, one can introduce \emph{slack variables} in order to transform this optimization program into a Quadratic Programming (QP) problem (quadratic objective, linear constraints). Once the problem solved, predictions are made using : 
 			\begin{equation}
 				y(x) = \sum_{n=1}^N (a_n - \hat{a}_n)k(x,x_n) + b
 			\end{equation}
 			where we introduced the kernel $k(x,x') = \phi(x)^T\phi(x')$. The coefficients $\{a_n\}$ and $\{\hat{a}_n\}$ actually are Lagrange multipliers for the QP problem, and provide a \emph{sparse} solutions in the data-points. The \emph{support vectors} (data point used for predictions) are those for which $a_n \neq 0$ or $\hat{a}_n\neq 0$, in other words those that lie on the boundary or outside of the $\eps$-tube defined by the loss function in equation (\ref{eq::loss}). \newline
-			As for the SVM, one can adopt a $\nu$-SVR formulation to have an lower-bound control on the number of retained support vectors. 
+			As for the SVM, one can adopt a $\nu$-SVR formulation to have a lower-bound control on the number of retained support vectors. 
 		}
 		\subsection{Relevance Vector machine for Regression}
 		{
@@ -122,12 +122,12 @@
 			\subsubsection{Complexity}
 			{
 				When comparing the SVR's and the RVR's complexity, one must distinguish complexity at training time and at testing time. \newline
-				Training the SVR sums up in solving a large quadratic-programing (QP) problem. A popular approach to do that implies breaking up the initial QP in smaller problems, solvable analytically, and is called \emph{Sequential Minimization Optimization} (SMO). It requires a linear (with respect to the datapoints) amount of memory, and scales between linear and quadratic complexity in the training set size (see \cite{platt1998sequential}). At test time, the complexity is linear in the number of support vectors. \newline
+				Training the SVR sums up in solving a large quadratic-programing (QP) problem. A popular approach to do that implies breaking up the initial QP into smaller problems, solvable analytically, and is called \emph{Sequential Minimization Optimization} (SMO). It requires a linear (with respect to the datapoints) amount of memory, and scales between linear and quadratic complexity in the training set size (see \cite{platt1998sequential}). At test time, the complexity is linear in the number of support vectors. \newline
 				Training a RVM involves optimizing a non-convex function. For a model with $M$ basis functions, the RVM requires the inversion of a $M\times M$ matrix, which requires from $O(M^{2.7})$ to $O(M^{3})$, which is as we just saw larger than the SVR's cost. However, parameters are determined automatically and in one run when training a RVR, while the hyper-parameters typically need several runs (f-fold cross-validation) to be estimated. At testing time, the RVR's complexity grows linearly with the number of relevance vectors.  
 			}
 			\subsection{Performance}
 			{
-				We just named one of the major pros of using RVR - there is no need for using held-out methods to estimate hyper-parameters, as they are automatically determined through automatic relevance detection (expect for parametric basis functions). Also, it has been shown (\cite{platt1998sequential}), \cite{bishop2006pattern}) that RVR leads to \emph{sparser solutions, without loss of generalization abilities} (on the contrary, the RVR usually performs better than the SVR). We will try to observe this observations in the experiments derived hereinafter.
+				We just named one of the major pros of using RVR - there is no need for using held-out methods to estimate hyper-parameters, as they are automatically determined through automatic relevance detection (expect for parametric basis functions). Also, it has been shown \cite{platt1998sequential, bishop2006pattern} that RVR leads to \emph{sparser solutions, without loss of generalization abilities} (on the contrary, the RVR usually performs better than the SVR). We will try to observe this observations in the experiments derived hereinafter.
 			}
 		}
 	}

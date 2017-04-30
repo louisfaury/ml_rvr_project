@@ -21,6 +21,7 @@ load(strcat('dataset_',name,'.mat'));
 %% Support Vector Regression 
 % Define kernel, hp
 kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
+
 switch kernelstr
     case 'rbf'
         width = 2;
@@ -51,7 +52,29 @@ type = struct('type',type,'params',params);
 plot_flag = 1;
 model = svr(Dataset,kernel,type,plot_flag);
 
+%% Relevance Vector Regression 
+% Define kernel, hp
+kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
+switch kernelstr
+    case 'rbf'
+        width = 2;
+        params = struct('width',width);
+    case 'polynomial'
+        degree = 2;
+        params = struct('degree',degree);
+    otherwise
+        params = [];
+end
+kernel = struct('name',kernelstr,'params',params);
 
+% define alpha and beta
+alpha = ones(Dataset.numPoints,1) * 0.1;
+beta = 0.1;
+params = struct('alpha', alpha, 'beta', beta);
+
+% call SVR 
+plot_flag = 1;
+model = rvr(Dataset,kernel,params,plot_flag);
 
 % First round, vizu 
     % 2. call baseline functions for svr and rvr -> deux fonctions 
