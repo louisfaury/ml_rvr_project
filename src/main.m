@@ -18,6 +18,9 @@ addpath(genpath('../datasets'));
 name = 'sinc'; % 'sinc', 'online_views'
 load(strcat('dataset_',name,'.mat')); 
 
+%% Prepare cross validation
+models = [];
+
 %% Support Vector Regression 
 % Define kernel, hp
 kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
@@ -52,6 +55,8 @@ type = struct('type',type,'params',params);
 plot_flag = 1;
 model = svr(Dataset,kernel,type,plot_flag);
 
+models = [models struct('type', 'SVR', 'kernel', kernel, 'params', type, 'name', 'SVR')];
+
 %% Relevance Vector Regression 
 % Define kernel, hp
 kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
@@ -68,13 +73,16 @@ end
 kernel = struct('name',kernelstr,'params',params);
 
 % define alpha and beta
-alpha = ones(Dataset.numPoints,1) * 0.1;
+% Assume alpha is a numerical value and is the same for each point
+alpha = 0.1;
 beta = 0.1;
 params = struct('alpha', alpha, 'beta', beta);
 
-% call SVR 
+% call RVR 
 plot_flag = 1;
 model = rvr(Dataset,kernel,params,plot_flag);
+
+models = [models struct('type', 'RVR', 'kernel', kernel, 'params', params, 'name', 'RVR')];
 
 % First round, vizu 
     % 2. call baseline functions for svr and rvr -> deux fonctions 
@@ -94,6 +102,7 @@ model = rvr(Dataset,kernel,params,plot_flag);
     %           params : f-fold and training test ratio 
     %           output : metric statisitics 
     
+    cross_validate(Dataset, models, 5, 0.8);
 
     
     

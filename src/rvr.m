@@ -1,14 +1,17 @@
 function model = rvr(ds,k,params,f);
 % ============= HEADER ============= %
-% \brief   ? Calls libsvm Support Vector Regression methods 
+% \brief   ? Calls sparseBayes Relevance Machine Regression methods
 % \param   ? ds <- dataset 
 %          ? k  <- kernel { 
 %                           'name'
 %                           'params'
 %                       }
-%          ? m  <- method : 'C' for C-svr, 'nu' for nu-SVR with hp 
+%          ? params  <- parameters {
+%                           'alpha'
+%                           'beta'
+%                       }
 %          ? f  <- plot option
-% \returns ? index of relevance vectors as well as respective coeffs
+% \returns ? Object with sparseBayes RVM output and 'predict' function
 % ============= HEADER ============= %
 
 % variable definitions 
@@ -33,34 +36,35 @@ switch k.name
 end
 
 OPTIONS     = SB2_UserOptions();
-SETTINGS    = SB2_ParameterSettings('Beta',params.beta,'Alpha',params.alpha,'Relevant', (1:n)');
+SETTINGS    = SB2_ParameterSettings('Beta',params.beta,'Alpha',params.alpha * ones(ds.numPoints,1),'Relevant', (1:n)');
 
 % run
 [Parameter, Hyperparameter, Diagnostic] = ...
     SparseBayes('Gaussian', BASIS, targets, OPTIONS, SETTINGS);
 
-model = struct('Parameter', Parameter, 'Hyperparameter', Hyperparameter, 'Diagnostic', Diagnostic);
+w_infer						= zeros(n,1);
+w_infer(Parameter.Relevant)	= Parameter.Value;
+
+switch k.name 
+    case 'linear'
+       predict = @(x) w_infer(Parameter.Relevant)' * inputs(Parameter.Relevant,:) * x;
+    case 'polynomial'
+       predict = @(x) w_infer(Parameter.Relevant)' * ((inputs(Parameter.Relevant,:) * x).^k.params.degree);
+    case 'rbf'
+       predict = @(x) w_infer(Parameter.Relevant)' * exp(-distSquared(inputs(Parameter.Relevant,:),x)/(k.params.width^2));
+    otherwise 
+       error('Unknown kernel');
+end
+
+model = struct('Parameter', Parameter, 'Hyperparameter', Hyperparameter, 'Diagnostic', Diagnostic, 'predict', predict);
+
 % plot
 if (f)
     x = (xmin:0.1:xmax)';
     y = true_f(x);
     
-    w_infer						= zeros(n,1);
-    w_infer(Parameter.Relevant)	= Parameter.Value;
+    label = predict(x);
 
-    switch k.name 
-    case 'linear'
-       k_mat = inputs(Parameter.Relevant,:) * x;
-    case 'polynomial'
-       k_mat = (inputs(Parameter.Relevant,:) * x).^k.params.degree;
-    case 'rbf'
-       k_mat = exp(-distSquared(inputs(Parameter.Relevant,:),x)/(k.params.width^2));
-    otherwise 
-        error('Unknown kernel');
-    end
-    
-    label = w_infer(Parameter.Relevant)' * k_mat;
-    
     figure
     hold on;
     grid minor;
