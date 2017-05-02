@@ -24,65 +24,33 @@ models = [];
 %% Support Vector Regression 
 % Define kernel, hp
 kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
+kernel = generate_kernel(kernelstr, 2);
 
-switch kernelstr
-    case 'rbf'
-        width = 2;
-        params = struct('width',width);
-    case 'polynomial'
-        degree = 2;
-        params = struct('degree',degree);
-    otherwise
-        params = [];
-end
-kernel = struct('name',kernelstr,'params',params);
 % defines svr type
 type = 'C'; % 'C', 'nu'
-switch type
-    case 'C'
-        C = 100;
-        eps = 0.3;
-        params = struct('C',C,'eps',eps);
-    case 'nu'
-        C = 1;
-        nu = 0.5;
-        params = struct('C',C,'nu',nu);
-    otherwise
-        error('Unknown SVR type');
-end
-type = struct('type',type,'params',params);
+C = 100;
+param = 0.1; %represents either epsilon or nu depending on the type
+
 % call SVR 
 plot_flag = 1;
-model = svr(Dataset,kernel,type,plot_flag);
-
-models = [models struct('type', 'SVR', 'kernel', kernel, 'params', type, 'name', 'SVR')];
+model = generate_SVR(type, kernel, C, param, 'SVR');
+model = train_model(Dataset,model,plot_flag);
 
 %% Relevance Vector Regression 
 % Define kernel, hp
 kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
-switch kernelstr
-    case 'rbf'
-        width = 2;
-        params = struct('width',width);
-    case 'polynomial'
-        degree = 2;
-        params = struct('degree',degree);
-    otherwise
-        params = [];
-end
-kernel = struct('name',kernelstr,'params',params);
+width = 2;
+kernel = generate_kernel(kernelstr, width);
 
 % define alpha and beta
 % Assume alpha is a numerical value and is the same for each point
 alpha = 0.1;
 beta = 0.1;
-params = struct('alpha', alpha, 'beta', beta);
 
+model = generate_RVR(kernel,alpha,beta,'RVR');
 % call RVR 
 plot_flag = 1;
-model = rvr(Dataset,kernel,params,plot_flag);
-
-models = [models struct('type', 'RVR', 'kernel', kernel, 'params', params, 'name', 'RVR')];
+model = train_model(Dataset,model,plot_flag);
 
 % First round, vizu 
     % 2. call baseline functions for svr and rvr -> deux fonctions 
@@ -101,6 +69,13 @@ models = [models struct('type', 'RVR', 'kernel', kernel, 'params', params, 'name
     % 4. Call cv function 
     %           params : f-fold and training test ratio 
     %           output : metric statisitics 
+    gk2 = generate_kernel('rbf',2);
+    
+    models = [];
+    models = [models generate_SVR('C',gk2,100,0.3, 'C SVR 100')];
+    models = [models generate_SVR('C',gk2,1,0.3, 'C SVR 1')];
+    models = [models generate_RVR(gk2, 0.1, 0.1, 'RVR alpha 0.1')];
+    models = [models generate_RVR(gk2, 0.1, 10, 'RVR alpha 10')];
     
     cross_validate(Dataset, models, 5, 0.8);
 
