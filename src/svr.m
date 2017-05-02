@@ -34,7 +34,7 @@ switch k.name
     case 'linear'
        k_str = ' -t 0';
     case 'polynomial'
-        k_str = strcat(' -t 1 -d',{' '},num2str(k.params.degree));
+        k_str = strcat(' -t 1 -r 0.1 -g 0.01 -d',{' '},num2str(k.params.degree));
     case 'rbf'
          k_str = strcat(' -t 2 -g',{' '},num2str(k.params.width));
     otherwise 

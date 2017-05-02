@@ -23,8 +23,8 @@ models = [];
 
 %% Support Vector Regression 
 % Define kernel, hp
-kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
-kernel = generate_kernel(kernelstr, 2);
+kernelstr = 'polynomial'; % 'gaussian', 'polynomial', 'linear'
+kernel = generate_kernel(kernelstr, 20);
 
 % defines svr type
 type = 'C'; % 'C', 'nu'
@@ -51,38 +51,27 @@ model = generate_RVR(kernel,alpha,beta,'RVR');
 % call RVR 
 plot_flag = 1;
 model = train_model(Dataset,model,plot_flag);
-
-% First round, vizu 
-    % 2. call baseline functions for svr and rvr -> deux fonctions 
-    %                                               params : dataset, options (hp) 
-    %                                               output : plot handle
-    % 3. post process (plots, hp), compute generalization 
-    
-    % [index_of_relevance, coeff_of_relevance, iterations_number,
-    % learning_curve(?)] = my_ml_function(dataset,options)
-    % 
-    
-    % 4. plot !
  
-%% Cross-validation, evaluative plots 
-% Cross-validation 
-    % 4. Call cv function 
-    %           params : f-fold and training test ratio 
-    %           output : metric statisitics 
-    gk2 = generate_kernel('rbf',2);
-    
-    models = [];
-    models = [models generate_SVR('C',gk2,100,0.3, 'C SVR 100')];
-    models = [models generate_SVR('C',gk2,1,0.3, 'C SVR 1')];
-    models = [models generate_RVR(gk2, 0.1, 0.1, 'RVR alpha 0.1')];
-    models = [models generate_RVR(gk2, 0.1, 10, 'RVR alpha 10')];
-    
-    cross_validate(Dataset, models, 5, 0.8);
+%% Cross-validation, evaluative plots
+% Cross-validation
+gk2 = generate_kernel('rbf',2);
 
-    
-    
-    
+models = [];
+models = [models generate_SVR('C',gk2,100,0.3, 'C SVR 100')];
+models = [models generate_SVR('C',gk2,1,0.3, 'C SVR 1')];
+models = [models generate_RVR(gk2, 0.1, 0.1, 'RVR alpha 0.1')];
+models = [models generate_RVR(gk2, 0.1, 10, 'RVR alpha 10')];
+
+cross_validate(Dataset, models, 5, 0.8); % prettier, box plot 
+
+% grid_search_cv() -> C-SVR  : eps, C, sigma -> colormap two versus one opt
+%                  -> nu-SVR : nu, C, sigma -> colormap two versus one opt 
+%                  -> RVR    : sigma -> 1d plot 
+% with MSE, AIC & BIC 
+
+% kernel engineer 
+% design polynomial (sum, ..) kernel 
+
+% computation time, memory (see doc, tic toc)
 %% IDEAS : 
 % -SVR : try to 'impose' through nu-svr the same number of RV as in RVM to compare performance at equel level of sparsity  
-% - General : before doing cross-validation, compare accuracy on full
-% training sets ? 
