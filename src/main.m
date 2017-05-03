@@ -9,6 +9,9 @@ clear all;
 close all;
 clc; 
 
+%% latex interpreter for figures
+set(0, 'defaulttextInterpreter', 'latex');
+
 %% add paths 
 addpath(genpath('../lib/libsvm'));
 addpath(genpath('../lib/sparse_bayes'));
@@ -39,7 +42,7 @@ model = train_model(Dataset,model,plot_flag);
 %% Relevance Vector Regression 
 % Define kernel, hp
 kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
-width = 2;
+width = 0.1;
 kernel = generate_kernel(kernelstr, width);
 
 % define alpha and beta
@@ -62,8 +65,47 @@ models = [models generate_SVR('C',gk2,1,0.3, 'C SVR 1')];
 models = [models generate_RVR(gk2, 0.1, 0.1, 'RVR alpha 0.1')];
 models = [models generate_RVR(gk2, 0.1, 10, 'RVR alpha 10')];
 
-cross_validate(Dataset, models, 5, 0.8); % prettier, box plot 
+cross_validate(Dataset, models, 5, 0.8, 1); % prettier, box plot 
 
+
+% %% Grid search for nu-SVR
+% nfold = 10;
+% ttratio = 0.7;
+% type = 'nu';
+% % Define kernel, hp
+% kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
+% % Define range of hyperparameters
+% nu      = linspace(0.1, 0.9, 10);
+% C       = logspace(-1, 2, 10);
+% sigma   = linspace(0.01, 10, 10);
+% % Perform gridsearch
+% grid_search_cv(Dataset, 'SVR', ttratio, nfold, kernelstr, type, nu, C, sigma);
+% 
+% 
+% %% Grid search for C-SVR
+% nfold = 10;
+% type = 'C';
+% ttratio = 0.7;
+% % Define kernel
+% kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
+% % Define range of hyperparameters
+% eps     = linspace(0.01, 2, 10);
+% C       = logspace(-1, 2, 10);
+% sigma   = linspace(0.01, 10, 10);
+% % Perform gridsearch
+% grid_search_cv(Dataset, 'SVR', ttratio, nfold, kernelstr, type, eps, C, sigma);
+
+%% Grid search for RVR
+ttratio = 0.8;
+nfold   = 50;
+% Define kernel, hp
+kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
+% Define range of hyperparameters
+sigma   = logspace(-2, 1, 30);
+% Perform gridsearch
+grid_search_cv(Dataset, 'RVR', ttratio, nfold, kernelstr, sigma);
+
+% define kernel
 % grid_search_cv() -> C-SVR  : eps, C, sigma -> colormap two versus one opt
 %                  -> nu-SVR : nu, C, sigma -> colormap two versus one opt 
 %                  -> RVR    : sigma -> 1d plot 

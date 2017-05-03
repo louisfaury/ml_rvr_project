@@ -1,15 +1,15 @@
-function mse = cross_validate(ds, models, nb_folds, training_ratio);
+function mse = cross_validate(ds, models, nb_folds, training_ratio, plotflag);
 % ============= HEADER ============= %
 % \brief   ? Performs cross validation and plots the result for all models
-% \param   ? ds <- dataset 
-%          ? models  <- sequence of 
-%                       model { 
+% \param   ? ds <- dataset
+%          ? models  <- sequence of
+%                       model {
 %                           'name' <- name for the plot
 %                           'type' <- 'SVR' or 'RVR'
-%                           'kernel' { 
+%                           'kernel' {
 %                                   'name'
 %                                   'params'
-%                                   } 
+%                                   }
 %                           'params' <- depend on the type
 %                       }
 %          ? nb_folds  <- number of folds for CV
@@ -18,33 +18,34 @@ function mse = cross_validate(ds, models, nb_folds, training_ratio);
 % \returns ? the mse matrix for each model on each fold
 % ============= HEADER ============= %
 
-    nb_models = size(models,2);
-    mse = zeros(nb_folds,nb_models);
-    
-    for j=1:nb_folds
-        [train_fold, test_fold] = generate_fold(ds,training_ratio);
-        for i=1:nb_models
-           switch models(i).type
-                case 'SVR'
-                    model = svr(train_fold, models(i).kernel, models(i).params,false);
-                    label = svmpredict(test_fold.inputs,test_fold.inputs,model,'-q');
-                    
-                case 'RVR'
-                    model = rvr(train_fold, models(i).kernel, models(i).params,false);
-                    label = model.predict(test_fold.inputs)';
-                    
-                otherwise 
-                    error('Unknown method');
-           end
-           mse(j,i) = mean((test_fold.outputs - label).^2);
-        end       
-    end
+nb_models = size(models,2);
+mse = zeros(nb_folds,nb_models);
 
-    names = cell(1,nb_models);
+for j=1:nb_folds
+    [train_fold, test_fold] = generate_fold(ds,training_ratio);
     for i=1:nb_models
-           names{i} = models(i).name;
+        switch models(i).type
+            case 'SVR'
+                model = svr(train_fold, models(i).kernel, models(i).params,false);
+                label = svmpredict(test_fold.inputs,test_fold.inputs,model,'-q');
+                
+            case 'RVR'
+                model = rvr(train_fold, models(i).kernel, models(i).params,false);
+                label = model.predict(test_fold.inputs)';
+                
+            otherwise
+                error('Unknown method');
+        end
+        mse(j,i) = mean((test_fold.outputs - label).^2);
     end
-    
+end
+
+names = cell(1,nb_models);
+for i=1:nb_models
+    names{i} = models(i).name;
+end
+
+if plotflag
     figure
     hold on;
     grid minor;
@@ -56,5 +57,6 @@ function mse = cross_validate(ds, models, nb_folds, training_ratio);
     xlabel('Models')
     ylabel('MSE')
     title('Cross Validation results')
-    
+end
+
 end
