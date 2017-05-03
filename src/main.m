@@ -26,8 +26,8 @@ models = [];
 
 %% Support Vector Regression 
 % Define kernel, hp
-kernelstr = 'polynomial'; % 'gaussian', 'polynomial', 'linear'
-kernel = generate_kernel(kernelstr, 20);
+kernelstr = 'polynomial'; % 'gaussian', 'polynomial', 'linear', 'polysum'
+kernel = generate_kernel(kernelstr, 8);
 
 % defines svr type
 type = 'C'; % 'C', 'nu'
