@@ -30,7 +30,6 @@ switch m.type
         error('Unknown SVR method');
 end
 ctrl_str = strcat(ctrl_str,m_str);
-in = inputs; % safe copy 
 switch k.name 
     case 'linear'
        k_str = ' -t 0';
@@ -38,28 +37,20 @@ switch k.name
         k_str = strcat(' -t 1 -r 0.1 -g 0.01 -d',{' '},num2str(k.params.degree));
     case 'rbf'
          k_str = strcat(' -t 2 -g',{' '},num2str(k.params.width));
-    case 'polysum'
-        k_str  = strcat(' -t  4');
-        in = compute_polysum_gram(inputs,k.params);
     otherwise 
         error('Unknown SVR method');
 end
 ctrl_str = char(strcat(ctrl_str,k_str,' -q'));
 
 % run
-model = svmtrain(targets,in,ctrl_str);
+model = svmtrain(targets,inputs,ctrl_str);
 
 
 % plot
 if (f)
     x = (xmin:0.1:xmax)';
-    % safe copy 
-    xpred_inst = x;
-    if (strcmp(k.name,'polysum'))
-        xpred_inst = compute_polysum_gram(x,k.params);
-    end
     y = true_f(x);
-    label = svmpredict(x,xpred_inst,model,'-q');
+    label = svmpredict(ones(size(x,1),1),x,model,'-q');
     figure
     hold on;
     grid minor;

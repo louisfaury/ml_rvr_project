@@ -26,13 +26,12 @@ models = [];
 
 %% Support Vector Regression 
 % Define kernel, hp
-kernelstr = 'polysum'; % 'gaussian', 'polynomial', 'linear', 'polysum'
-kernel = generate_kernel(kernelstr,2,3,0,0,0.1,0); %% TODO : fix to match the poly results 
-%kernel = generate_kernel(kernelstr, 8);
+kernelstr = 'rbf'; % 'rbf', 'polynomial', 'linear'
+kernel = generate_kernel(kernelstr, 2);
 
 % defines svr type
 type = 'C'; % 'C', 'nu'
-C = 100;
+C = 0.1;
 param = 0.1; %represents either epsilon or nu depending on the type
 
 % call SVR 
@@ -84,17 +83,17 @@ cross_validate(Dataset, models, 5, 0.8, 1); % prettier, box plot
 % 
 % 
 % %% Grid search for C-SVR
-% nfold = 10;
-% type = 'C';
-% ttratio = 0.7;
-% % Define kernel
-% kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
-% % Define range of hyperparameters
-% eps     = linspace(0.01, 2, 10);
-% C       = logspace(-1, 2, 10);
-% sigma   = linspace(0.01, 10, 10);
-% % Perform gridsearch
-% grid_search_cv(Dataset, 'SVR', ttratio, nfold, kernelstr, type, eps, C, sigma);
+nfold = 10;
+type = 'C';
+ttratio = 0.7;
+% Define kernel
+kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
+% Define range of hyperparameters
+eps     = linspace(0.01, 2, 10);
+C       = logspace(-1, 2, 10);
+sigma   = linspace(0.01, 10, 10);
+% Perform gridsearch
+grid_search_cv(Dataset, 'SVR', ttratio, nfold, kernelstr, type, eps, C, sigma);
 
 %% Grid search for RVR
 ttratio = 0.8;

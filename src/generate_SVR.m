@@ -1,4 +1,4 @@
-function model = generate_SVR(type, kernel, C, param, name);
+function model = generate_SVR(type, kernel, C, param, name)
     switch type
         case 'nu'
             t = nu_params(C,param);

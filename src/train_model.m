@@ -1,4 +1,4 @@
-function model = train_model(ds,m, plot_flag);
+function model = train_model(ds,m, plot_flag)
    switch m.type
        case 'SVR'
            model = svr(ds,m.kernel,m.params,plot_flag);
