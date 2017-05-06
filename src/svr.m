@@ -24,8 +24,10 @@ ctrl_str = '';
 switch m.type
     case 'C'
         m_str = strcat('-s 3 -c',{' '},num2str(m.params.C),' -p',{' '},num2str(m.params.eps));
+        eps = m.params.eps;
     case 'nu'
         m_str = strcat('-s 4 -c',{' '},num2str(m.params.C),' -n',{' '},num2str(m.params.nu));
+        eps = 0;
     otherwise 
         error('Unknown SVR method');
 end
@@ -63,13 +65,15 @@ if (f)
     p2 = scatter(inputs, targets,30*ones(size(inputs)),'MarkerFaceColor','r','MarkerFaceAlpha',0.4,'MarkerEdgeColor','r','MarkerEdgeAlpha',0.4);
     % plot reference function
     p3 = plot(x,y, 'k', 'LineWidth', 2);
-    % plot prediction
-    p4 = plot(x, label, '-.','Color',[0.3 0.6 1], 'LineWidth',2.2);
-    
+    % plot prediction and epsilon-tube
+    p4 = plot(x, label, '-','Color',[0.3 0.6 1], 'LineWidth',2.2);
+    p5 = plot(x,label+eps,'-.','Color',[0.3 0.6 1], 'LineWidth',1.1);
+    plot(x,label-eps,'-.','Color',[0.3 0.6 1], 'LineWidth',1.1);
+
     
     xlabel('Input')
     ylabel('Output')
-    legend([p1,p2,p3,p4],{'Support vectors', 'Datapoints','Target function', 'Modeled function'});
+    legend([p1,p2,p3,p4,p5],{'Support vectors', 'Datapoints','Target function', 'Modeled function','Epsilon tube'});
     title(strcat('Result of SVR for dataset ',{' '}, ds.name))
 end
 
