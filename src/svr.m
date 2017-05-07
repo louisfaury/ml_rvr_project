@@ -52,7 +52,7 @@ if (f)
     % nu-SVM : get equivalent epsilon 
     if (m.type == 'nu')
         tube_boundary_points_ind = model.sv_indices(find(abs(model.sv_coef)~=m.params.C)); % index of points laying on the eps-insensitive tube 
-        l = svmpredict(zeros(size(tube_boundary_points_ind)),inputs(tube_boundary_points_ind),model);
+        l = svmpredict(zeros(size(tube_boundary_points_ind)),inputs(tube_boundary_points_ind),model,'-q');
         eps = mean(abs(targets(tube_boundary_points_ind)-l));
     end
     

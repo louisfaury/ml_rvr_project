@@ -31,8 +31,8 @@ kernel = generate_kernel(kernelstr, 2);
 
 % defines svr type
 type = 'nu'; % 'C', 'nu'
-C = 1;
-param = 0.1; %represents either epsilon or nu depending on the type
+C = 10;
+param = 0.2; %represents either epsilon or nu depending on the type
 
 % call SVR 
 plot_flag = 1;
