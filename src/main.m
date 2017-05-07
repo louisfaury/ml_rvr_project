@@ -30,7 +30,7 @@ kernelstr = 'rbf'; % 'rbf', 'polynomial', 'linear'
 kernel = generate_kernel(kernelstr, 2);
 
 % defines svr type
-type = 'C'; % 'C', 'nu'
+type = 'nu'; % 'C', 'nu'
 C = 1;
 param = 0.1; %represents either epsilon or nu depending on the type
 

@@ -27,7 +27,6 @@ switch m.type
         eps = m.params.eps;
     case 'nu'
         m_str = strcat('-s 4 -c',{' '},num2str(m.params.C),' -n',{' '},num2str(m.params.nu));
-        eps = 0;
     otherwise 
         error('Unknown SVR method');
 end
@@ -50,6 +49,13 @@ model = svmtrain(targets,inputs,ctrl_str);
 
 % plot
 if (f)
+    % nu-SVM : get equivalent epsilon 
+    if (m.type == 'nu')
+        tube_boundary_points = find(abs(model.sv_coef)~=m.params.C);
+        l = svmpredict(zeros(size(tube_boundary_points)),inputs(model.sv_indices(tube_boundary_points)),model);
+        eps = mean(abs(targets(model.sv_indices(tube_boundary_points))-l));
+    end
+    
     x = (xmin:0.1:xmax)';
     y = true_f(x);
     label = svmpredict(ones(size(x,1),1),x,model,'-q');
