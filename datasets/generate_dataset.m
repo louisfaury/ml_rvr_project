@@ -10,8 +10,8 @@ close all;
 
 %% Constants definition
 n               = 100;       % Number of datapoints 
-variance        = 0.004;    % Gaussian noise variance
-pOutliers       = 0.1;     % Proportion of outliers
+variance        = 0.01;    % Gaussian noise variance
+pOutliers       = 0;     % Proportion of outliers
 
 %% Generating real function
 % X interval

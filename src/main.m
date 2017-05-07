@@ -31,7 +31,7 @@ kernel = generate_kernel(kernelstr, 2);
 
 % defines svr type
 type = 'C'; % 'C', 'nu'
-C = 0.1;
+C = 1;
 param = 0.1; %represents either epsilon or nu depending on the type
 
 % call SVR 
@@ -42,7 +42,7 @@ model = train_model(Dataset,model,plot_flag);
 %% Relevance Vector Regression 
 % Define kernel, hp
 kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
-width = 0.1;
+width = 0.5;
 kernel = generate_kernel(kernelstr, width);
 
 % define alpha and beta
