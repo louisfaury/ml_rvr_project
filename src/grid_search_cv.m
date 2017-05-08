@@ -99,6 +99,7 @@ xlabel('$\sigma$')
 ylabel('MSE')
 title(strcat(num2str(nfold), '-fold cross validation results for RVR'));
 
+
 %TODO add plots for other metrics
 
 end
@@ -132,6 +133,7 @@ function display_grid_search_nusvr(Dataset, kernelstr, nfold, nu, C, sigma, mse)
     pcolor(sigmaPlot, nuPlot, squeeze(meanMse(:,:,idx3)))
     shading interp
     clb = colorbar;
+    set(gca,'xscale','log')
     title(clb, strcat(num2str(nfold), '-fold MSE'));
     xlabel('$\sigma$');
     ylabel('$\nu$')
@@ -146,18 +148,28 @@ function display_grid_search_nusvr(Dataset, kernelstr, nfold, nu, C, sigma, mse)
     title(clb, strcat(num2str(nfold), '-fold MSE'));
     xlabel('$\sigma$');
     ylabel('$C$')
-    set(gca,'yscale','log')
+    set(gca,'yscale','log', 'xscale', 'log')
     title(strcat('Grid search for $\nu$-SVR on $\sigma$ and C ($\nu$ = ', num2str(bestNu), ')'));
+    
+    % Plot slices
+    subplot(2,2,4)
+    [nuPlot, sigmaPlot, cPlot] = meshgrid(nu, sigma, C);
+    slice(nuPlot, sigmaPlot, cPlot, meanMse,  [], [],  [C(1)  C(round((idx3+1)/2)) C(idx3)], 'linear')
+    shading interp
+    clb = colorbar;
+    title(clb, strcat(num2str(nfold), '-fold MSE'));
+    xlabel('$\nu$');
+    ylabel('$\sigma$');
+    zlabel('$C$');
+    zlim([C(1), C(idx3)]);
+    set(gca,'yscale','log', 'zscale', 'log')
+    title(strcat('Grid search for $\nu$-SVR'));
     
     % Plot best model
     kernel = generate_kernel(kernelstr, bestSigma);
     name = strcat('$\nu$-SVR $\sigma$=', num2str(bestSigma), '$\nu$=',  num2str(bestNu), 'C =', num2str(bestC));
     model  = generate_SVR('nu', kernel, bestC, bestNu, name);
     model = train_model(Dataset,model,1);
-    
-    % TODO: add fourth plot for other metrics
-    
-    
     
 
 end
@@ -174,9 +186,9 @@ function display_grid_search_csvr(Dataset, kernelstr, nfold, epsilon, C, sigma, 
     figure
     % Plot grid search nu against C
     subplot(2,2,1)
-    [cPlot, nuPlot] = meshgrid(C, epsilon);
-    pcolor(nuPlot, cPlot, squeeze(meanMse(idx1,:,:)))
-    set(gca,'yscale','log')
+    [cPlot, epsPlot] = meshgrid(C, epsilon);
+    pcolor(epsPlot, cPlot, squeeze(meanMse(idx1,:,:)))
+    set(gca,'yscale','log', 'xscale', 'log')
     shading interp
     clb = colorbar;
     title(clb, strcat(num2str(nfold), '-fold MSE'));
@@ -187,8 +199,9 @@ function display_grid_search_csvr(Dataset, kernelstr, nfold, epsilon, C, sigma, 
    
     % Plot grid search sigma against nu
     subplot(2,2,2)
-    [nuPlot, sigmaPlot] = meshgrid(epsilon, sigma);
-    pcolor(sigmaPlot, nuPlot, squeeze(meanMse(:,:,idx3)))
+    [epsPlot, sigmaPlot] = meshgrid(epsilon, sigma);
+    pcolor(sigmaPlot, epsPlot, squeeze(meanMse(:,:,idx3)))
+    set(gca,'yscale','log', 'xscale', 'log')
     shading interp
     clb = colorbar;
     title(clb, strcat(num2str(nfold), '-fold MSE'));
@@ -205,18 +218,28 @@ function display_grid_search_csvr(Dataset, kernelstr, nfold, epsilon, C, sigma, 
     title(clb, strcat(num2str(nfold), '-fold MSE'));
     xlabel('$\sigma$');
     ylabel('$C$')
-    set(gca,'yscale','log')
+    set(gca,'yscale','log', 'xscale', 'log')
     title(strcat('Grid search for $\epsilon$-SVR on $\sigma$ and C ($\epsilon$ = ', num2str(bestepsilon), ')'));
+   
+    % Plot slices 
+    subplot(2,2,4)
+    [epsPlot, sigmaPlot, cPlot] = meshgrid(epsilon, sigma, C);
+    slice(epsPlot, sigmaPlot, cPlot, meanMse, [], [],  [C(1)  C(round((idx3+1)/2)) C(idx3)], 'linear')
+    shading interp
+    clb = colorbar;
+    title(clb, strcat(num2str(nfold), '-fold MSE'));
+    xlabel('$\epsilon$');
+    ylabel('$\sigma$');
+    zlabel('$C$');
+    zlim([C(1), C(idx3)]);
+    set(gca,'yscale','log', 'xscale', 'log', 'zscale', 'log')
+    title(strcat('Grid search for $C$-SVR'));
     
     % Plot best model
     kernel = generate_kernel(kernelstr, bestSigma);
     name = strcat('$\epsilon$-SVR $\sigma$=', num2str(bestSigma), '$\epsilon$=',  num2str(bestepsilon), 'C =', num2str(bestC));
     model  = generate_SVR('C', kernel, bestC, bestepsilon, name);
     model = train_model(Dataset,model,1);
-    
-    % TODO: add fourth plot for other metrics
-    
-    
     
 
 end
