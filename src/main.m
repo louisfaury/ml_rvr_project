@@ -16,6 +16,7 @@ set(0, 'defaulttextInterpreter', 'latex');
 addpath(genpath('../lib/libsvm'));
 addpath(genpath('../lib/sparse_bayes'));
 addpath(genpath('../datasets'));
+addpath(genpath('../lib'))
 
 %% load 
 name = 'sinc'; % 'sinc', 'online_views'

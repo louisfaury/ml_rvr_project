@@ -91,8 +91,10 @@ if (f)
     % plot prediction
     p4 = plot(x, label, '-','Color',[0.3 0.6 1], 'LineWidth',2.2);  
     % plot covariance
-    p5 = plot(x,label+proj_std', '-.','Color',[0.3 0.6 1], 'LineWidth',2.2);
-    plot(x,label-proj_std', '-.','Color',[0.3 0.6 1], 'LineWidth',2.2);
+    %p5 = plot(x,label+proj_std', '-.','Color',[0.3 0.6 1], 'LineWidth',2.2);
+    %area(x,label+proj_std',);
+    %plot(x,label-proj_std', '-.','Color',[0.3 0.6 1], 'LineWidth',2.2);
+    p5 = jbfill(x',label+proj_std',label-proj_std','b',[1 1 1],0,0.1);
 
     xlabel('Input')
     ylabel('Output')
