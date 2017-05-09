@@ -60,8 +60,9 @@ model = struct('Parameter', Parameter, 'Hyperparameter', Hyperparameter, 'Diagno
 
 % plot
 if (f)
-    x = (xmin:0.1:xmax)';
-    y = true_f(x);
+   % x = (xmin:0.1:xmax)';
+     x = (-10:0.1:10)';
+   y = true_f(x);
     
     label = predict(x);
 
@@ -70,6 +71,16 @@ if (f)
     grid minor;
     set(gca, 'FontSize', 14);
     
+    % builds the predictive distribution 
+    max = intmax;
+    a = double(max)*ones(n+1,1);
+    a(Parameter.Relevant) = Hyperparameter.Alpha;
+    A = diag(a);
+    K = compute_gram_matrix(k,inputs,inputs);
+    Sigma = inv(A + Hyperparameter.beta*(K'*K));
+    % m = Hyperparameter.beta * Sigma *( K' * targets); % can be used for prediction
+    Kx = compute_gram_matrix(k,x,inputs);
+    proj_std = sqrt(1/Hyperparameter.beta*ones(size(x)) +  diag(Kx * Sigma * Kx'));
     % plot support vectors
     p1 = scatter(inputs(Parameter.Relevant), targets(Parameter.Relevant),80*ones(size(inputs((Parameter.Relevant)))),'o','MarkerEdgeColor', 'g', 'MarkerFaceColor', 'w','LineWidth',1.5);
     scatter(inputs(Parameter.Relevant), targets(Parameter.Relevant),30*ones(size(inputs((Parameter.Relevant)))),'MarkerFaceColor','r','MarkerFaceAlpha',0.8,'MarkerEdgeColor','r','MarkerEdgeAlpha',0.8);
@@ -78,11 +89,14 @@ if (f)
     % plot reference function
     p3 = plot(x,y, 'k', 'LineWidth', 2);
     % plot prediction
-    p4 = plot(x, label, '-.','Color',[0.3 0.6 1], 'LineWidth',2.2);  
-    
+    p4 = plot(x, label, '-','Color',[0.3 0.6 1], 'LineWidth',2.2);  
+    % plot covariance
+    p5 = plot(x,label+proj_std', '-.','Color',[0.3 0.6 1], 'LineWidth',2.2);
+    plot(x,label-proj_std', '-.','Color',[0.3 0.6 1], 'LineWidth',2.2);
+
     xlabel('Input')
     ylabel('Output')
-    legend([p1,p2,p3,p4],{'Support vectors', 'Datapoints','Target function', 'Modeled function'});
+    legend([p1,p2,p3,p4,p5],{'Support vectors', 'Datapoints','Target function', 'Modeled function','Predictive distribution (std)'});
     title(strcat('Result of RVR for dataset',{' '}, ds.name))
 end
 
