@@ -60,9 +60,8 @@ model = struct('Parameter', Parameter, 'Hyperparameter', Hyperparameter, 'Diagno
 
 % plot
 if (f)
-   % x = (xmin:0.1:xmax)';
-     x = (-10:0.1:10)';
-   y = true_f(x);
+    x = (xmin:0.1:xmax)';
+    y = true_f(x);
     
     label = predict(x);
 
