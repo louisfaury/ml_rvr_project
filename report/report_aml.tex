@@ -70,16 +70,21 @@
 			\end{equation}
 			Therefore, the quantity to be minimized can be expressed as : 
 			\begin{equation}
-				J(w) = C\sum_{n=1}^N E_\eps(w^T\phi(x_n)-t_n) + \frac{1}{2}\lVert w \rVert ^2
+				J(w) = \frac{C}{n}\sum_{n=1}^N E_\eps(w^T\phi(x_n)-t_n) + \frac{1}{2}\lVert w \rVert ^2
 			\end{equation}
 			where $C$ is a regularization parameter. 
 			\newline 
-			As for the SVM, one can introduce \emph{slack variables} in order to transform this optimization program into a Quadratic Programming (QP) problem (quadratic objective, linear constraints). Once the problem solved, predictions are made using : 
+			As for the SVM, one can introduce \emph{slack variables} in order to transform this optimization program into a Quadratic Programming (QP) problem (quadratic objective, linear constraints) : 
+			
+			\begin{mini}|s|[2]  				 {w,b}{\frac{1}{2}\lVert w \rVert^2 + \frac{C}{n}\sum_{i=1}^n{\left(\xi_i + \hat{\xi}_i\right)}}  				 {\label{eq::svr}}{}   				\addConstraint{\xi, \hat{\xi}}{\geq 0}{\text{ (row wise) }}  				 \addConstraint{w^T\phi(x_i)+b + \eps + \xi_i  }{\geq t_i,\quad}{i=1,\hdots,n}
+				\addConstraint{w^T\phi(x_i)+b - \eps - \hat{\xi}_i  }{\leq t_i,\quad}{i=1,\hdots,n}			\end{mini}
+				
+			Once the problem solved, predictions are made using : 
 			\begin{equation}
 				y(x) = \sum_{n=1}^N (a_n - \hat{a}_n)k(x,x_n) + b
 			\end{equation}
-			where we introduced the kernel $k(x,x') = \phi(x)^T\phi(x')$. The coefficients $\{a_n\}$ and $\{\hat{a}_n\}$ actually are Lagrange multipliers for the QP problem, and provide a \emph{sparse} solutions in the data-points. The \emph{support vectors} (data point used for predictions) are those for which $a_n \neq 0$ or $\hat{a}_n\neq 0$, in other words those that lie on the boundary or outside of the $\eps$-tube defined by the loss function in equation (\ref{eq::loss}). \newline
-			As for the SVM, one can adopt a $\nu$-SVR formulation to have a lower-bound control on the number of retained support vectors. 
+			where we introduced the kernel $k(x,x') = \phi(x)^T\phi(x')$. The coefficients $\{a_n\}$ and $\{\hat{a}_n\}$ actually are Lagrange multipliers for the QP problem (\ref{eq::svr}), and provide a \emph{sparse} solution  - only a few data points are used for regression. Those are called \emph{support vectors}, and are so that  $a_n \neq 0$ or $\hat{a}_n\neq 0$ - in other words, those that lie on the boundary or outside of the $\eps$-tube defined by the loss function in equation (\ref{eq::loss}). \newline
+			As for the SVM, one can adopt a $\nu$-SVR formulation (see \cite{scholkopf2000new}) to have a \emph{lower-bound control} on the number of retained support vectors. 
 		}
 		\subsection{Relevance Vector machine for Regression}
 		{
@@ -113,7 +118,7 @@
 					\Sigma &= \left(A+\beta \boldsymbol{\phi}^T\boldsymbol{\phi}\right)^{-1}, \qquad A = \text{diag}(\alpha_i)
 				\end{aligned}
 			\end{equation}
-			In a full Bayesian approach, $\alpha$ and $\beta$ are both given prior distributions. However, this leads to intractable computations when computing predictions. The use of \emph{empirical Bayes} solves this problem, by approximating $\alpha$ and $\beta$ by their maximum-a-posteriori value (also known as the \emph{evidence approximation}). \newline
+			In a full Bayesian approach, $\alpha$ and $\beta$ are both given prior distributions. However, this leads to intractable computations when computing predictions. The use of \emph{empirical Bayes} solves this problem, by approximating $\alpha$ and $\beta$ by their maximum-a-posteriori value (also known as the \emph{evidence approximation} or type-2 maximum likelihood). \newline
 			As a result of approximation, a proportion of parameters $\alpha_i$ are driven to infinite values, constraining the corresponding weights $w_i$ to have $0$ mean and infinite precision, and hence are set to $0$. The resulting predictions are therefore sparse in data-points, and the inputs $\{x_n\}$ corresponding to non-zero weights are called \emph{relevance vectors}. Once the optimal values $\alpha^*$ and $\beta^*$ found, the predictive distribution over $y$ can therefore be computed using $\alpha^*$ and $\beta^*$. 
 			\newline The sparsity analysis of the RVR leads to a practical algorithm for optimizing the hyper-parameters that has significant speed advantages, and is referred to as \emph{automatic relevance determination}. The full algorithm and its justification can be found in \cite{bishop2006pattern}.
 		}
