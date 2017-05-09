@@ -43,7 +43,7 @@ model = train_model(Dataset,model,plot_flag);
 %% Relevance Vector Regression 
 % Define kernel, hp
 kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
-width = 0.45;
+width = 1.2;
 kernel = generate_kernel(kernelstr, width);
 
 % define alpha and beta
