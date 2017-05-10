@@ -1,4 +1,4 @@
-function mse = cross_validate(ds, models, nb_folds, training_ratio, plotflag);
+function [mse, BIC] = cross_validate(ds, models, nb_folds, training_ratio, plotflag);
 % ============= HEADER ============= %
 % \brief   ? Performs cross validation and plots the result for all models
 % \param   ? ds <- dataset
@@ -15,11 +15,13 @@ function mse = cross_validate(ds, models, nb_folds, training_ratio, plotflag);
 %          ? nb_folds  <- number of folds for CV
 %          ? training_ratio  <- ratio of training examples
 
-% \returns ? the mse matrix for each model on each fold
+% \returns ? mse <- the mse matrix for each model on each fold
+%            BIC <- BIC metric
 % ============= HEADER ============= %
 
 nb_models = size(models,2);
 mse = zeros(nb_folds,nb_models);
+BIC = zeros(nb_folds,nb_models);
 
 for j=1:nb_folds
     [train_fold, test_fold] = generate_fold(ds,training_ratio);
@@ -36,7 +38,18 @@ for j=1:nb_folds
             otherwise
                 error('Unknown method');
         end
-        mse(j,i) = mean((test_fold.outputs - label).^2);
+        mse(j,i)  = mean((test_fold.outputs - label).^2);
+        
+        switch models(i).type
+            case 'SVR'
+                nRelevant = model.totalSV;
+                BIC(j,i) = 100*2*ds.numPoints*mse(j,i) + 2*nRelevant*log(ds.numPoints);
+            case 'RVR'
+                nRelevant = length(model.Parameter.Relevant);
+                BIC(j,i) = 100*2*ds.numPoints*mse(j,i) + nRelevant*log(ds.numPoints);
+            otherwise
+                error('Unknown method')
+        end
     end
 end
 

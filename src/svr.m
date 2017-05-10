@@ -37,7 +37,7 @@ switch k.name
     case 'polynomial'
         k_str = strcat(' -t 1 -r 0.1 -g 0.01 -d',{' '},num2str(k.params.degree));
     case 'rbf'
-         k_str = strcat(' -t 2 -g',{' '},num2str(k.params.width));
+         k_str = strcat(' -t 2 -g',{' '},num2str(1/(k.params.width)^2));
     otherwise 
         error('Unknown SVR method');
 end
