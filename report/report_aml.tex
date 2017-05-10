@@ -12,6 +12,8 @@
 \usepackage[latin1]{inputenc}
 \usepackage{lipsum}
 \usepackage{coolMath}
+\graphicspath{{Images/}}
+
 \title{Relevance Vector Machine for regression and comparaison with the SVR}
 \author{
 	\IEEEauthorblockN{Hadrien Hendrikx}
@@ -181,14 +183,56 @@
 					\caption{The 1D artificial dataset}
 				\end{figure}
 			}
+			\vspace{5pt}
+			
 			\subsubsection{Real dataset}
 			{
+				This dataset, known as the Online News Popularity dataset, provide informations about a web article (number of words, number of link to other articles, number of images or videos, ..) to predict its number of shares in social network (see \cite{fernandes2015proactive} for full details). The following table sums up the dataset characteristics. 
+				\vspace{3pt}
 				
+				\begin{center}
+				\noindent\begin{tabular}{|c|c|}
+					\hline 
+					\textbf{Dimension} & \textbf{Points} \\
+					\hline
+					58 & 30493\\
+					\hline
+				\end{tabular}
+				\end{center}	
 			}
 		}
-		\subsection{Results}
+		\subsection{}
 		{
-
+			We hereinafter describe different computations and results obtained on the artificial data with both the SVR and the RVR. 
+			
+			\subsubsection{Support Vector Regression}
+			{
+				We implemented both the $\eps$-SVR and the $\nu$-SVR on the artificial dataset. We used the \texttt{libsvm} library (see \cite{libsvm}) with a radial-basis function kernel : 
+				\begin{equation}
+					\forall x,x', \quad k(x,x') = \exp{\left( -\frac{\lVert x -x'\rVert^2}{\sigma^2}\right)}
+				\end{equation}
+				
+				We therefore have to tune three hyper-parameters : $\sigma$ (kernel width), $C$ (penalization factor) and $\nu$ (resp. $\eps$) for the $\nu$-SVR (resp. $\eps$-SVR). Figures (\ref{nuSVR}) and (\ref{epsSVR}) display the regressive function obtained for three given parameters for both methods. For the $\nu$-SVR, the corresponding $\eps$-insensitive tube was computed thanks to the values of the final Lagrange multipliers (a Lagrange multiplier strictly inferior to $C$ indicates a point laying on the $\eps$-tube). 
+				\begin{figure}
+					\begin{center}
+						\includegraphics[width=0.85\linewidth]{nuSVR_nu02_C100_width02}
+						\caption{$\nu$-SVR with : $C=100$, $\nu=0.2$, $\sigma = 1.5$}
+						\label{nuSVR}
+					\end{center}
+				\end{figure}
+				\begin{figure}				
+					\begin{center}
+						\includegraphics[width=0.85\linewidth]{epsSVR_eps015_C50_width2}
+						\caption{$\eps$-SVR with : $C=50$, $\eps=0.15$, $\sigma = 2$}
+						\label{epsSVR}
+					\end{center}
+				\end{figure}
+			}
+			
+		}
+		\subsection{Cross-validation}
+		{
+		
 		}
 	}
 	\section{Discussion}
