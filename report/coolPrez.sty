@@ -1,0 +1,114 @@
+% @file : coolprez.sty
+% @author : Louis Faury
+% @date : 
+% @brief : Cool presentation package for unified templating 
+
+%Identification 
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{coolprez}[05/11/2016 Cool Presentation Package]
+
+\usetheme{AnnArbor}
+
+\RequirePackage[francais,english]{babel}
+\RequirePackage[T1]{fontenc}
+\RequirePackage[latin1]{inputenc}
+\RequirePackage{graphicx}
+\RequirePackage{wrapfig}
+\RequirePackage{color}   
+\RequirePackage{amsthm}
+\RequirePackage{calc}
+\RequirePackage{pifont}
+\RequirePackage{stmaryrd}
+\RequirePackage{hyperref}
+\RequirePackage{amsbsy}
+\RequirePackage{xcolor}
+\RequirePackage{multicol}
+\RequirePackage{multimedia}
+\RequirePackage{pdfpages}
+\RequirePackage[style=mla,backend=bibtex]{biblatex}
+\RequirePackage{coolMath}
+
+% ============================== Set colors  and fonts==============================
+% Custom colors
+\definecolor{lightgray}{rgb}{0.89,0.89,0.89}
+\definecolor{darkgray}{rgb}{0.33,0.40,0.45}
+\definecolor{coolblue}{RGB}{48,97,255}
+
+% Colors
+\setbeamercolor{normal text}{fg=black,bg=white}
+\setbeamercolor{frametitle}{fg=black,bg=white}
+\setbeamercolor{palette primary}{fg=black, bg=lightgray}
+\setbeamercolor{palette secondary}{fg=white, bg=coolblue}
+\setbeamercolor{palette tertiary}{fg=white, bg=darkgray}
+\setbeamercolor{section in head/foot}{fg=white}
+\setbeamercolor{subsection in head/foot}{fg=coolblue}
+\setbeamercolor{title in title page}{fg = coolblue}
+
+% Font 
+\setbeamerfont{frametitle}{size=\normalfont, family=\sffamily, series=\bf}
+\setbeamerfont{section in head/foot}{size=\footnotesize}
+\setbeamerfont{headline}{size=\small,series = \bfseries}
+\setbeamerfont{subsection in head/foot}{size=\tiny}
+\setbeamerfont{title in title page}{size=\large, family = \sffamily, series=\bf} 
+
+% ==============================   Useful settings   ==============================
+
+% Make TOC at every beginning of section
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+  \vspace{-3ex}
+  \frametitle{Plan}
+     \tableofcontents[currentsection,hideothersubsections]
+  \end{frame}
+}
+
+% Template for footline sizes 
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.6\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in foot}\insertshorttitle
+  \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{title in head/foot}
+    \insertinstitute\hspace*{1ex}
+  \end{beamercolorbox}}%
+  \begin{beamercolorbox}[wd=.1\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{title in head/foot}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{1ex}
+  \end{beamercolorbox}%
+  \vskip0pt%
+}
+\makeatletter
+
+
+% Templates for toc appearance
+\setbeamertemplate{section in toc}[square]
+\setbeamertemplate{subsection in toc}[square]
+\setbeamertemplate{itemize items}[triangle]
+\setbeamertemplate{frametitle}[default][center]
+
+	
+	
+% Template for cite in footnote
+\newrobustcmd*{\footlessfullcite}{\AtNextCite{\renewbibmacro{title}{}\renewbibmacro{in:}{}}\footfullcite}
+
+% Title page definition
+\defbeamertemplate*{title page}{customized}[1][]
+{
+	\vfill
+	\begin{center}
+		\textcolor{white}{\large{blankline}}\par
+		\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\par
+		\usebeamerfont{title in title page}\usebeamercolor{title in title page}\inserttitle\par
+		\vspace{5pt}
+		\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par
+		
+		\vspace{10pt}
+      		\usebeamerfont{author}\insertauthor\par
+		\usebeamerfont{institute}\insertinstitute\par
+		\usebeamerfont{date}\insertdate\par
+	\end{center}
+}
