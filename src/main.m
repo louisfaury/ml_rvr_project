@@ -28,12 +28,12 @@ models = [];
 %% Support Vector Regression 
 % Define kernel, hp
 kernelstr = 'rbf'; % 'rbf', 'polynomial', 'linear'
-kernel = generate_kernel(kernelstr, 2);
+kernel = generate_kernel(kernelstr, 0.25);
 
 % defines svr type
 type = 'nu'; % 'C', 'nu'
-C = 10;
-param = 0.2; %represents either epsilon or nu depending on the type
+C = 200;
+param = 0.15; %represents either epsilon or nu depending on the type
 
 % call SVR 
 plot_flag = 1;
