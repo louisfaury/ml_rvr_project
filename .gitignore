@@ -9,6 +9,7 @@
 src/*
 !/src/**/*.m
 !/src/**/*.mat
+!/src/**/*.avi
 
 !/datasets
 datatsets/*
