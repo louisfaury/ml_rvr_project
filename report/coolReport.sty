@@ -1,0 +1,28 @@
+% @file : coolreport.sty
+% @author : Louis Faury
+% @date : 
+% @brief : Cool report package for unified templating 
+
+%Identification 
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{coolreport}[05/11/2016 Cool Report Package]
+
+%% ----------------------------------------------------- PACKAGES ----------------------------------------------------- %%
+\RequirePackage{coolArticle} 	% coolArticle package 
+\RequirePackage{pdfpages}		% include pdf 
+\RequirePackage{titlesec}		% fancy boxes 
+\RequirePackage{eqparbox}		% cool pseudocode comments
+\RequirePackage{longtable}		% long table package for cross pages tabulars 
+\RequirePackage{coolMath}
+
+%% -------------------------------------------------------  PAGE STYLE ------------------------------------------------------%%
+\pagestyle{fancy}
+\titleformat{\chapter}[display]{\normalfont\huge\bfseries\filcenter\color{MidnightBlue}}{\chaptertitlename\ \thechapter}{20pt}{\Huge}\titlespacing*{\chapter}{0pt}{30pt}{20pt}
+\fancyfoot[LE,RO]{\thepage}
+\fancyfoot[LO,CE]{Chapter \thechapter}
+
+
+\newcommand\cRTitle[1]
+{
+	\fancyfoot[CO,RE]{ #1 }
+}
