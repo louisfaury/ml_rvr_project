@@ -97,7 +97,7 @@ if (f)
 
     xlabel('Input')
     ylabel('Output')
-    legend([p1,p2,p3,p4,p5],{'Support vectors', 'Datapoints','Target function', 'Modeled function','Predictive distribution (std)'});
+    legend([p1,p2,p3,p4,p5],{'Relevant vectors', 'Datapoints','Target function', 'Predictive mean','Predictive std'});
     title(strcat('Result of RVR for dataset',{' '}, ds.name))
 end
 
