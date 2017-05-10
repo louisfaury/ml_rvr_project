@@ -221,7 +221,7 @@
 					\forall x,x', \quad k(x,x') = \exp{\left( -\frac{\lVert x -x'\rVert^2}{\sigma^2}\right)}
 				\end{equation}
 				
-				We therefore have to tune three hyper-parameters : $\sigma$ (kernel width), $C$ (penalization factor) and $\nu$ (resp. $\eps$) for the $\nu$-SVR (resp. $\eps$-SVR). Figures (\ref{nuSVR}) and (\ref{epsSVR}) display the regressive function obtained for three given parameters for both methods. For the $\nu$-SVR, the corresponding $\eps$-insensitive tube was computed thanks to the values of the final Lagrange multipliers (a Lagrange multiplier strictly inferior to $C$ indicates a point laying on the $\eps$-tube). 
+				We therefore have to tune three hyper-parameters : $\sigma$ (kernel width), $C$ (penalization factor) and $\nu$ (resp. $\eps$) for the $\nu$-SVR (resp. $\eps$-SVR). Figures (\ref{nuSVR}) and (\ref{epsSVR}) display the regressive function obtained for three given parameters for both methods on the artificial dataset. For the $\nu$-SVR, the corresponding $\eps$-insensitive tube was computed thanks to the values of the final Lagrange multipliers (a Lagrange multiplier strictly inferior to $C$ indicates a point laying on the $\eps$-tube). 
 				\begin{figure}
 					\begin{center}
 						\includegraphics[width=0.85\linewidth]{nuSVR_nu02_C100_width02}
@@ -253,7 +253,15 @@
 		}
 		\subsection{Cross-validation}
 		{
-		
+			\subsubsection{Artificial dataset}
+			{
+			To assess best hyper-parameters for all three algorithms ($\epsilon$-SVR, $\nu$-SVR and RVR), grid search was performed using 50-fold cross validations. Chosen training test ratio was set to 0.75. Chosen metric to evaluate performance of the algorithms is the BIC (Bayesian Information Criterion). Among the properties of such metric is the ability to evaluate a compromise between complexity and as well as likelihood of the different models.
+			General formula for BIC is:
+			\begin{equation}
+				BIC = -2*ln(L) + kln(M)
+			\end{equation}
+			where $L$ corresponds to the likelihood of the model, $k$ is the number of parameters of the model and $M$ is the number of datapoints. In the case of RVR and SVR, number of parameters $k$ is directly proportional to the number  of relevant vectors and respectively support vectors.
+			}
 		}
 	}
 	\section{Discussion}
