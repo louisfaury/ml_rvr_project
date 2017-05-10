@@ -70,31 +70,31 @@ model = train_model(Dataset,model,plot_flag);
 
 
 % %% Grid search for nu-SVR
-nfold = 50;
-ttratio = 0.75;
-type = 'nu';
-% Define kernel, hp
-kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
-% Define range of hyperparameters
-nu      = linspace(0.01, 0.9, 20);
-C       = logspace(-1, 1.5, 20);
-sigma   = logspace(-2, 1, 20);
-% Perform gridsearch
-grid_search_cv(Dataset, 'SVR', ttratio, nfold, kernelstr, type, nu, C, sigma);
+% nfold = 50;
+% ttratio = 0.75;
+% type = 'nu';
+% % Define kernel, hp
+% kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
+% % Define range of hyperparameters
+% nu      = linspace(0.01, 0.9, 20);
+% C       = logspace(-1, 1.5, 20);
+% sigma   = logspace(-2, 1, 20);
+% % Perform gridsearch
+% grid_search_cv(Dataset, 'SVR', ttratio, nfold, kernelstr, type, nu, C, sigma);
 
 
 %% Grid search for C-SVR
-nfold = 50;
-type = 'C';
-ttratio = 0.75;
-% Define kernel
-kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
-% Define range of hyperparameters
-eps     = logspace(-2, 1, 20);
-C       = logspace(-1, 1.5, 20);
-sigma   = logspace(-2, 1, 20);
-% Perform gridsearch
-grid_search_cv(Dataset, 'SVR', ttratio, nfold, kernelstr, type, eps, C, sigma);
+% nfold = 50;
+% type = 'C';
+% ttratio = 0.75;
+% % Define kernel
+% kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
+% % Define range of hyperparameters
+% eps     = logspace(-2, 1, 30);
+% C       = logspace(-1, 1.5, 30);
+% sigma   = logspace(-2, 1, 30);
+% % Perform gridsearch
+% grid_search_cv(Dataset, 'SVR', ttratio, nfold, kernelstr, type, eps, C, sigma);
 
 %% Grid search for RVR
 ttratio = 0.75;

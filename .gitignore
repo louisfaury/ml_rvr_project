@@ -18,7 +18,9 @@ datatsets/*
 
 !/report
 report/*
-!/report/*.pdf
 !/report/*.tex
 !/report/*.bib
 !/report/*.sty
+!/report/Images/
+!/report/Images/*.png
+!/report/*.pdf

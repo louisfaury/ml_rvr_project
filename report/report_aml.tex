@@ -12,6 +12,7 @@
 \usepackage[latin1]{inputenc}
 \usepackage{lipsum}
 \usepackage{coolMath}
+\usepackage[hang,small]{caption}
 \graphicspath{{Images/}}
 
 \title{Relevance Vector Machine for regression and comparaison with the SVR}
@@ -255,13 +256,64 @@
 		{
 			\subsubsection{Artificial dataset}
 			{
-			To assess best hyper-parameters for all three algorithms ($\epsilon$-SVR, $\nu$-SVR and RVR), grid search was performed using 50-fold cross validations. Chosen training test ratio was set to 0.75. Chosen metric to evaluate performance of the algorithms is the BIC (Bayesian Information Criterion). Among the properties of such metric is the ability to evaluate a compromise between complexity and as well as likelihood of the different models.
+			To assess best hyper-parameters for all three algorithms ($\epsilon$-SVR, $\nu$-SVR and RVR), grid search was performed using 50-fold cross validations. Training test ratio was set to 0.75. Chosen metric to evaluate performance of the algorithms is the BIC (Bayesian Information Criterion). Among the properties of such metric is the ability to evaluate a compromise between complexity and likelihood of the different models. Compared to a metric like Mean Square Error, BIC therefore tends to favor model sparsity which is one of the main advantages of studied regression algorithms.
+			
 			General formula for BIC is:
 			\begin{equation}
-				BIC = -2*ln(L) + kln(M)
+				BIC = -2ln(L) + kln(N)
 			\end{equation}
-			where $L$ corresponds to the likelihood of the model, $k$ is the number of parameters of the model and $M$ is the number of datapoints. In the case of RVR and SVR, number of parameters $k$ is directly proportional to the number  of relevant vectors and respectively support vectors.
+			where $L$ corresponds to the likelihood of the model, $k$ is the number of parameters of the model and $N$ is the number of datapoints. In the case of RVR and SVR, number of parameters $k$ is directly proportional to the number  of relevant vectors and respectively support vectors. In both cases likelihood of models related to the Mean Square Error (MSE) as such:
+			\begin{equation}
+				ln(L) = -\frac{N}{2\sigma^2_{noise}}MSE
+			\end{equation}
+			where $\sigma^2_{noise}$ corresponds to the variance of dataset noise.
+			
+			For SVR, number of model parameters corresponds to the number of non-zero coefficients  $\alpha_i$ and $\alpha_i^*$. $k$ is therefore equals to twice the number of support vectors  ($N_{SV}$)so that:
+			\begin{equation}
+				BIC_{SVR} =  \frac{MSE}{\sigma^2_{noise}} + 2N_{SV}ln(M)
+			\end{equation}
+			
+				\begin{figure}
+					\begin{center}
+						\includegraphics[width=0.85\linewidth]{gridsearch_epsSVR}
+						\caption{Grid search for $\epsilon-SVR$ over $\epsilon$, $C$ and $\sigma$ for sinc dataset \\ Best hyperparameters: $\epsilon = 0.17$, $C = 2.40$, $\sigma = 1.17$}
+						\label{fig::gridSearch_epsSVR_sinc}
+					\end{center}
+				\end{figure}
+				
+				\begin{figure}
+					\begin{center}
+						\includegraphics[width=0.85\linewidth]{gridsearch_nuSVR}
+						\caption{Grid search for $\nu-SVR$ over $\nu$, $C$ and $\sigma$ for sinc dataset \\ Best hyperparameters: $\nu = 0.057$, $C = 1.52$, $\sigma = 1.13$}
+						\label{fig::gridSearch_nuSVR_sinc}
+					\end{center}
+				\end{figure}
+			
+			Figures (\ref{fig::gridSearch_epsSVR_sinc}) and (\ref{fig::gridSearch_nuSVR_sinc}) display grid search results for both $\epsilon$-SVR and $\nu$-SVR in the form of a heat-map. As expected both selected models are almost the same therefore showing the equivalence between both approaches. Both lead to a total of 14 support vectors.\\
+			
+			For RVR, the number of free parameters $k$ corresponds to the non zero coefficients $w_i$ of the relevant vectors. It is therefore equals to $N_{RV}$, the number of relevant vectors. As a consequence, BIC for RVR writes:
+			\begin{equation}
+				BIC_{RVR} =  \frac{MSE}{\sigma^2_{noise}} + N_{RV}ln(M)
+			\end{equation}
+			
+				\begin{figure}
+					\begin{center}
+						\includegraphics[width=0.75\linewidth]{gridsearch_RVR}
+						\caption{Grid search for $RVR$  over $\sigma$ for sinc dataset. Best hyperparameter: $\sigma = 1.28$}
+						\label{fig::gridSearch_RVR_sinc}
+					\end{center}
+				\end{figure}
+			
+			Figure (\ref{fig::gridSearch_RVR_sinc}) displays grid-search results over kernel width $\sigma$, the only hyperparameter.
+
 			}
+							
+			\subsection{Real dataset}
+			{
+				For this dataset, the lack of information concerning dataset noise prevented to use BIC as a metric for finding best hyperparameters. We therefore performed grid search using cross validation over Mean Square Error for the different algorithms. Such metric only considers fitting of the different models with the data without taking model complexity into account.
+				
+			}
+			
 		}
 	}
 	\section{Discussion}

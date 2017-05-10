@@ -43,10 +43,10 @@ for j=1:nb_folds
         switch models(i).type
             case 'SVR'
                 nRelevant = model.totalSV;
-                BIC(j,i) = 100*2*ds.numPoints*mse(j,i) + 2*nRelevant*log(ds.numPoints);
+                BIC(j,i) = 100*ds.numPoints*mse(j,i) + 2*nRelevant*log(ds.numPoints);
             case 'RVR'
                 nRelevant = length(model.Parameter.Relevant);
-                BIC(j,i) = 100*2*ds.numPoints*mse(j,i) + nRelevant*log(ds.numPoints);
+                BIC(j,i) = 100*ds.numPoints*mse(j,i) + nRelevant*log(ds.numPoints);
             otherwise
                 error('Unknown method')
         end
