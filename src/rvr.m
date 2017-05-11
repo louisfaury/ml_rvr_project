@@ -35,12 +35,12 @@ switch k.name
         error('Unknown kernel');
 end
 
-OPTIONS     = SB2_UserOptions();
-SETTINGS    = SB2_ParameterSettings('Beta',params.beta,'Alpha',params.alpha * ones(ds.numPoints,1),'Relevant', (1:n)');
+%OPTIONS     = SB2_UserOptions();
+%SETTINGS    = SB2_ParameterSettings('Beta',params.beta,'Alpha',params.alpha * ones(ds.numPoints,1),'Relevant', (1:n)');
 
 % run
 [Parameter, Hyperparameter, Diagnostic] = ...
-    SparseBayes('Gaussian', BASIS, targets, OPTIONS, SETTINGS);
+    SparseBayes('Gaussian', BASIS, targets);
 
 w_infer						= zeros(n,1);
 w_infer(Parameter.Relevant)	= Parameter.Value;
@@ -56,7 +56,7 @@ switch k.name
        error('Unknown kernel');
 end
 
-model = struct('Parameter', Parameter, 'Hyperparameter', Hyperparameter, 'Diagnostic', Diagnostic, 'predict', predict);
+model = struct('Parameter', Parameter, 'Hyperparameter', Hyperparameter, 'Diagnostic', Diagnostic, 'predict', predict, 'totalSV', length(Parameter.Relevant));
 
 % plot
 if (f)

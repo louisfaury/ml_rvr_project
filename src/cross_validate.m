@@ -1,4 +1,4 @@
-function [mse, BIC] = cross_validate(ds, models, nb_folds, training_ratio, plotflag);
+function [mse, BIC, relevants] = cross_validate(ds, models, nb_folds, training_ratio, plotflag);
 % ============= HEADER ============= %
 % \brief   ? Performs cross validation and plots the result for all models
 % \param   ? ds <- dataset
@@ -22,6 +22,7 @@ function [mse, BIC] = cross_validate(ds, models, nb_folds, training_ratio, plotf
 nb_models = size(models,2);
 mse = zeros(nb_folds,nb_models);
 BIC = zeros(nb_folds,nb_models);
+relevants = zeros(nb_folds,nb_models);
 
 for j=1:nb_folds
     [train_fold, test_fold] = generate_fold(ds,training_ratio);
@@ -38,6 +39,7 @@ for j=1:nb_folds
             otherwise
                 error('Unknown method');
         end
+       
         mse(j,i)  = mean((test_fold.outputs - label).^2);
         
         switch models(i).type
@@ -50,6 +52,8 @@ for j=1:nb_folds
             otherwise
                 error('Unknown method')
         end
+        
+        relevants(j,i) = nRelevant;
     end
 end
 

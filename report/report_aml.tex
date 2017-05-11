@@ -47,7 +47,7 @@
 	\maketitle
 	
 	\begin{abstract}
-		This report, written in the context of a machine learning coding project, compares two sparse regression techniques. \newline After introducing some theoretical aspects on Support Vector Regression (SVR) and the Relevance Vector Regression (RVR), we introduce two datasets (an artificial one as well as a real one) that will serve us as baselines for experimental comparisons between the two methods. 
+		This report, written in the context of a machine learning coding project, compares two sparse regression techniques. \newline After introducing some theoretical aspects on Support Vector Regression (SVR) and the Relevance Vector Regression (RVR), we introduce two datasets (an artificial one well as a real one) that will serve us as baselines for experimental comparisons between the two methods. 
 		\newline We will then focus the comparison on a few key features. Namely, we will study the tradeoff found between generalization and sparsity in the two methods. Issues such as robustness (behavior far from data, dataset scavenging and data chunking), computational complexity and training / testing time will also be tackled. 
 	\end{abstract}
 	
@@ -280,7 +280,7 @@
 			\end{equation}
 			where $\sigma^2_{noise}$ corresponds to the variance of dataset noise.
 			
-			For SVR, number of model parameters corresponds to the number of non-zero coefficients  $\alpha_i$ and $\alpha_i^*$. $k$ is therefore equals to twice the number of support vectors  ($N_{SV}$)so that:
+			For SVR, number of model parameters corresponds to the number of non-zero coefficients  $\alpha_i$ and $\alpha_i^*$ \textbf{Plutot $\hat{alpha}$ non? Et a quel point ça fait vraiment 2 free parameters sachant que c'est plutot leur }. $k$ is therefore equals to twice the number of support vectors  ($N_{SV}$)so that:
 			\begin{equation}
 				BIC_{SVR} =  \frac{MSE}{\sigma^2_{noise}} + 2N_{SV}ln(M)
 			\end{equation}
@@ -301,7 +301,7 @@
 					\end{center}
 				\end{figure}
 			
-			Figures (\ref{fig::gridSearch_epsSVR_sinc}) and (\ref{fig::gridSearch_nuSVR_sinc}) display grid search results for both $\epsilon$-SVR and $\nu$-SVR in the form of a heat-map. As expected both selected models are almost the same therefore showing the equivalence between both approaches. Both lead to a total of 14 support vectors.\\
+			Figures (\ref{fig::gridSearch_epsSVR_sinc}) and (\ref{fig::gridSearch_nuSVR_sinc}) display grid search results for both $\epsilon$-SVR and $\nu$-SVR in the form of a heat-map. As expected (\textbf{Are they the ones of figures 3 and 4?})both selected models are almost the same therefore showing the equivalence between both approaches. Both lead to a total of 14 support vectors.\\
 			
 			For RVR, the number of free parameters $k$ corresponds to the non zero coefficients $w_i$ of the relevant vectors. It is therefore equals to $N_{RV}$, the number of relevant vectors. As a consequence, BIC for RVR writes:
 			\begin{equation}
@@ -317,7 +317,16 @@
 				\end{figure}
 			
 			Figure (\ref{fig::gridSearch_RVR_sinc}) displays grid-search results over kernel width $\sigma$, the only hyperparameter.
-
+			
+			\begin{figure}
+				\begin{center}
+					\includegraphics[width=0.75\linewidth]{ROC_sinc}
+					\caption{Evaluation of the tradeoff between raw performance ($MSE$) and sparsity (number of non-zero coefficients). Points correspond to the best hyperparameters for each method and each metric.}
+					\label{fig::ROC_sinc}
+				\end{center}
+			\end{figure}
+			
+			The $BIC$ criterion is a way to take model complexity into account when choosing an appropriate model. In our setting, the complexity is governed by the number of support vectors used and we are interested in the relationship between sparsity (the more support vectors the more complex the function can be) and performance (measured by the $MSE$). We analyze this tradeoff in figure \ref{fig::ROC_sinc} for the $sinc$ dataset. We can see that in terms of pure $MSE$ minimization both $\nu-SVR$ and $C-SVR$ perform slightly better than $RVR$ but at a very high cost in terms of sparsity since they have respectively $3$ and almost $5$ times more support vectors. For the hyperparameters that minimize the $BIC$ criterion, $SVR$ achieves a sparsity that is comparable to that of $RVR$ (although still there are still more support vectors) but this comes at the cost of a sharp rise of the $MSE$ of around $10\%$ for the $\nu-SVR$ and almost $50\%$ for the $C-SVR$. We can conclude that $RVR$ should be prefered as soon as the sparsity of the model is a concern.
 			}
 							
 			\subsection{Real dataset}
