@@ -18,6 +18,7 @@ function grid_search_cv_rvr(Dataset, ttratio, nfold, kernelstr, sigma)
 
 models = [];
 for i=1:length(sigma)
+    disp(i)
    kernel = generate_kernel(kernelstr, sigma(i));
    models = [models generate_RVR(kernel, 0.1, 0.1, strcat('RVR \sigma=', num2str(sigma(i))))];
 end
@@ -249,10 +250,10 @@ function display_grid_search_nusvr(Dataset, kernelstr, nfold, nu, C, sigma, mse,
 
 
     % Plot best model
-    kernel = generate_kernel(kernelstr, bestSigma);
-    name = strcat('$\nu$-SVR $\sigma$=', num2str(bestSigma), '$\nu$=',  num2str(bestNu), 'C =', num2str(bestC));
-    model  = generate_SVR('nu', kernel, bestC, bestNu, name);
-    model = train_model(Dataset,model,1);
+%     kernel = generate_kernel(kernelstr, bestSigma);
+%     name = strcat('$\nu$-SVR $\sigma$=', num2str(bestSigma), '$\nu$=',  num2str(bestNu), 'C =', num2str(bestC));
+%     model  = generate_SVR('nu', kernel, bestC, bestNu, name);
+%     model = train_model(Dataset,model,1);
     
 
 end
@@ -384,10 +385,10 @@ function display_grid_search_csvr(Dataset, kernelstr, nfold, epsilon, C, sigma, 
     title(strcat('Grid search for $\epsilon$-SVR'));
     
     % Plot best model
-    kernel = generate_kernel(kernelstr, bestSigma);
-    name = strcat('$\epsilon$-SVR $\sigma$=', num2str(bestSigma), '$\epsilon$=',  num2str(bestepsilon), 'C =', num2str(bestC));
-    model  = generate_SVR('C', kernel, bestC, bestepsilon, name);
-    model = train_model(Dataset,model,1);
+%     kernel = generate_kernel(kernelstr, bestSigma);
+%     name = strcat('$\epsilon$-SVR $\sigma$=', num2str(bestSigma), '$\epsilon$=',  num2str(bestepsilon), 'C =', num2str(bestC));
+%     model  = generate_SVR('C', kernel, bestC, bestepsilon, name);
+%     model = train_model(Dataset,model,1);
     
 
 end

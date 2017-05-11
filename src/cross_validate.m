@@ -29,7 +29,7 @@ for j=1:nb_folds
         switch models(i).type
             case 'SVR'
                 model = svr(train_fold, models(i).kernel, models(i).params,false);
-                label = svmpredict(test_fold.inputs,test_fold.inputs,model,'-q');
+                label = svmpredict(test_fold.outputs,test_fold.inputs,model,'-q');
                 
             case 'RVR'
                 model = rvr(train_fold, models(i).kernel, models(i).params,false);

@@ -14,7 +14,6 @@ function model = svr(ds,k,m,f)
 % variable definitions 
 inputs  = ds.inputs;
 targets = ds.outputs;
-true_f  = str2func(ds.function);
 xmin    = ds.minInput;
 xmax    = ds.maxInput;
 n       = ds.numPoints;
@@ -49,6 +48,7 @@ model = svmtrain(targets,inputs,ctrl_str);
 
 % plot
 if (f)
+    true_f  = str2func(ds.function);
     % nu-SVM : get equivalent epsilon 
     if (m.type == 'nu')
         tube_boundary_points_ind = model.sv_indices(find(abs(model.sv_coef)~=m.params.C)); % index of points laying on the eps-insensitive tube 
