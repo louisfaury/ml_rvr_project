@@ -197,7 +197,19 @@
 			
 			\subsubsection{Real dataset}
 			{
-				This dataset, known as the Online News Popularity dataset, provide informations about a web article (number of words, number of link to other articles, number of images or videos, ..) to predict its number of shares in social network (see \cite{fernandes2015proactive} for full details). The following table sums up the dataset characteristics. 
+				%This dataset, known as the Online News Popularity dataset, provide informations about a web article (number of words, number of link to other articles, number of images or videos, ..) to predict its number of shares in social network (see \cite{fernandes2015proactive} for full details). The following table sums up the dataset characteristics. 
+				
+			        %\begin{center}
+				%\noindent\begin{tabular}{|c|c|}
+				%	\hline 
+				%	\textbf{Dimension} & \textbf{Points} \\
+				%	\hline
+				%	58 & 30493\\
+				%	\hline
+				%\end{tabular}
+				%\end{center}
+				This dataset, known as the Airfoils Self-Noise dataset provides informations about design of various airfoils and physical environment (free stream velocity, angle of attack, chord length, frequency, suction side thickness) in order to predict the resulting sound pressure level in dB (see \cite{brooks1989} for full details). The following table sums up the dataset characteristics.
+				
 				\vspace{3pt}
 				
 				\begin{center}
@@ -205,7 +217,7 @@
 					\hline 
 					\textbf{Dimension} & \textbf{Points} \\
 					\hline
-					58 & 30493\\
+					5 & 1503\\
 					\hline
 				\end{tabular}
 				\end{center}	
@@ -256,13 +268,13 @@
 		{
 			\subsubsection{Artificial dataset}
 			{
-			To assess best hyper-parameters for all three algorithms ($\epsilon$-SVR, $\nu$-SVR and RVR), grid search was performed using 50-fold cross validations. Training test ratio was set to 0.75. Chosen metric to evaluate performance of the algorithms is the BIC (Bayesian Information Criterion). Among the properties of such metric is the ability to evaluate a compromise between complexity and likelihood of the different models. Compared to a metric like Mean Square Error, BIC therefore tends to favor model sparsity which is one of the main advantages of studied regression algorithms.
+			To assess best hyper-parameters for all three algorithms ($\epsilon$-SVR, $\nu$-SVR and RVR), grid search was performed using 50-fold cross validations. Training test ratio was set to 0.75. Chosen metric to evaluate performance of the algorithms is derived from the BIC (Bayesian Information Criterion). Among the properties of such metric is the ability to evaluate a compromise between complexity and likelihood of the different models. Compared to a metric like Mean Square Error, it therefore tends to favor model sparsity which is one of the main advantages of studied regression algorithms.
 			
 			General formula for BIC is:
 			\begin{equation}
 				BIC = -2ln(L) + kln(N)
 			\end{equation}
-			where $L$ corresponds to the likelihood of the model, $k$ is the number of parameters of the model and $N$ is the number of datapoints. In the case of RVR and SVR, number of parameters $k$ is directly proportional to the number  of relevant vectors and respectively support vectors. In both cases likelihood of models related to the Mean Square Error (MSE) as such:
+			where $L$ corresponds to the likelihood of the model, $k$ is the number of parameters of the model and $N$ is the number of datapoints. In the case of RVR and SVR, number of parameters $k$ is directly proportional to the number  of relevant vectors and respectively support vectors. In both cases we relate likelihood of models to the Mean Square Error (MSE) as such:
 			\begin{equation}
 				ln(L) = -\frac{N}{2\sigma^2_{noise}}MSE
 			\end{equation}
@@ -310,7 +322,19 @@
 							
 			\subsection{Real dataset}
 			{
-				For this dataset, the lack of information concerning dataset noise prevented to use BIC as a metric for finding best hyperparameters. We therefore performed grid search using cross validation over Mean Square Error for the different algorithms. Such metric only considers fitting of the different models with the data without taking model complexity into account.
+				For this dataset, the lack of information concerning dataset noise prevented to use BIC-like metrics for finding best hyperparameters. We therefore performed grid search using 10-fold cross validation over Mean Square Error for the different algorithms, after standardization of data. Such metric only considers fitting of the different models with the data without taking model complexity into account. Due to higher dimensionality and to an higher number of points, training test ratio was reduced to 0.5.
+				
+				Results of grid search over $\sigma$, the kernel width for Relevance Vectors Regression are displayed on figure (\ref{fig::gridSearch_RVR_airfoils}). Optimal kernel width therefore corresponds to $\sigma = 1.25$ leading to an MSE of 0.19. Number of retrieved relevance vectors is 94.
+				
+				\begin{figure}
+					\begin{center}
+						\includegraphics[width=0.8\linewidth]{airfoils_gridsearch_RVR}
+						\caption{Grid search for $RVR$  over $\sigma$ for airfoils dataset. Best hyperparameter: $\sigma = 1.25$}
+						\label{fig::gridSearch_RVR_airfoils}
+					\end{center}
+				\end{figure}
+				
+				
 				
 			}
 			
