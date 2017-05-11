@@ -22,7 +22,7 @@ for i=1:length(sigma)
    models = [models generate_RVR(kernel, 0.1, 0.1, strcat('RVR \sigma=', num2str(sigma(i))))];
 end
 
-[mse, BIC] = cross_validate(Dataset, models, nfold, ttratio, 0);
+[mse, BIC, trained_models] = cross_validate(Dataset, models, nfold, ttratio, 0);
 
 display_grid_search_rvr(sigma, mse, BIC, nfold);
 
@@ -61,7 +61,7 @@ function grid_search_nusvr(Dataset, ttratio, nfold, kernelstr, nu, C, sigma)
                 name = strcat('$\nu$-SVR $\sigma$=', num2str(sigma(i)), '\nu=',  num2str(nu(j)), 'C =', num2str(C(k)));
                 models = [models generate_SVR('nu', kernel, C(k), nu(j), name)];
             end
-            [modelMSE, modelBIC] = cross_validate(Dataset, models, nfold, ttratio, 0);
+            [modelMSE, modelBIC, trained_models] = cross_validate(Dataset, models, nfold, ttratio, 0);
             mse(i,j,:,:) = modelMSE';
             BIC(i,j,:,:) = modelBIC';
         end
@@ -85,7 +85,7 @@ function grid_search_csvr(Dataset, ttratio, nfold, kernelstr, epsilon, C, sigma)
                 name = strcat('$\C$-SVR $\sigma$=', num2str(sigma(i)), '\epsilon=',  num2str(epsilon(j)), 'C =', num2str(C(k)));
                 models = [models generate_SVR('C', kernel, C(k), epsilon(j), name)];
             end
-            [modelMSE, modelBIC] = cross_validate(Dataset, models, nfold, ttratio, 0);
+            [modelMSE, modelBIC, trained_models] = cross_validate(Dataset, models, nfold, ttratio, 0);
             mse(i,j,:,:) = modelMSE';
             BIC(i,j,:,:) = modelBIC';
         end
