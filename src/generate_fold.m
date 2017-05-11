@@ -22,9 +22,9 @@ end
 
 %Moche, je suis preneur si vous avez autre chose
 function fold = generate_fold_aux(ds,mask,folds_size);
-    fold = struct('inputs',ds.inputs(mask),'outputs',ds.outputs(mask),'function',ds.function);
-    fold.referenceOutputs = ds.referenceOutputs;
-    fold.name = ds.name;
+    fold = struct('inputs',ds.inputs(mask,:),'outputs',ds.outputs(mask),'function',ds.function);
+    %fold.referenceOutputs = ds.referenceOutputs;
+    %fold.name = ds.name;
     fold.numPoints = folds_size;
     fold.minInput = min(fold.outputs);
     fold.maxInput = max(fold.inputs);

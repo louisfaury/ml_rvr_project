@@ -7,20 +7,20 @@
 
 clear;
 close all;
-clc; 
+clc;
 
 %% latex interpreter for figures
 set(0, 'defaulttextInterpreter', 'latex');
 
-%% add paths 
+%% add paths
 addpath(genpath('../lib/libsvm'));
 addpath(genpath('../lib/sparse_bayes'));
 addpath(genpath('../datasets'));
 addpath(genpath('../lib'))
 
-%% load 
-name = 'sinc'; % 'sinc', 'online_views'
-load(strcat('dataset_',name,'.mat')); 
+%% load
+name = 'airfoils'; % 'sinc', 'online_views', 'airfoils'
+load(strcat('dataset_',name,'.mat'));
 
 %% Support Vector Regression 
 % Define kernel, hp
@@ -37,42 +37,43 @@ plot_flag = 1;
 model = generate_SVR(type, kernel, C, param, 'SVR');
 model = train_model(Dataset,model,plot_flag);
 
-%% Relevance Vector Regression 
-% Define kernel, hp
-kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
-width = 0.73;
-kernel = generate_kernel(kernelstr, width);
+%% Relevance Vector Regression
+%Define kernel, hp
+% kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
+% width = 1.35;
+% kernel = generate_kernel(kernelstr, width);
+% 
+% % define alpha and beta
+% % Assume alpha is a numerical value and is the same for each point
+% alpha = 0.1;
+% beta = 0.1;
+% 
+% model = generate_RVR(kernel,alpha,beta,'RVR');
+% % call RVR
+% plot_flag = 0;
+% model = train_model(Dataset,model,plot_flag);
 
-% define alpha and beta
-% Assume alpha is a numerical value and is the same for each point
-alpha = 0.1;
-beta = 0.1;
-
-model = generate_RVR(kernel,alpha,beta,'RVR');
-% call RVR 
-plot_flag = 1;
-model = train_model(Dataset,model,plot_flag);
- 
 %% Cross-validation, evaluative plots
 % Cross-validation
 % gk2 = generate_kernel('rbf',2);
-% 
+%
 % models = [];
 % models = [models generate_SVR('C',gk2,100,0.3, 'C SVR 100')];
 % models = [models generate_SVR('C',gk2,1,0.3, 'C SVR 1')];
 % models = [models generate_RVR(gk2, 0.1, 0.1, 'RVR alpha 0.1')];
 % models = [models generate_RVR(gk2, 0.1, 10, 'RVR alpha 10')];
-% 
-% cross_validate(Dataset, models, 5, 0.8, 1); % prettier, box plot 
-
+%
+% cross_validate(Dataset, models, 5, 0.8, 1); % prettier, box plot
 
 %% Grid search for nu-SVR
-nfold = 50;
-ttratio = 0.75;
+nfold = 10;
+ttratio = 0.5;
+
 type = 'nu';
 % Define kernel, hp
 kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
 % Define range of hyperparameters
+
 nu      = linspace(0.001, 0.1, 20);
 C       = logspace(-1, 1.5, 20);
 sigma   = logspace(-2, 1, 20);
@@ -83,6 +84,7 @@ grid_search_cv(Dataset, 'SVR', ttratio, nfold, kernelstr, type, nu, C, sigma);
 %MSE: sigma = 1.1288, nu = 0.19737, C = 5.1348
 %BIC: sigma = 1.1288, nu = 0.032263, C = 3.7927
 %% Grid search for C-SVR
+<<<<<<< HEAD
 nfold = 50;
 type = 'C';
 ttratio = 0.75;
@@ -99,14 +101,14 @@ grid_search_cv(Dataset, 'SVR', ttratio, nfold, kernelstr, type, eps, C, sigma);
 %MSE: sigma = 0.92367, eps = 0.085317, C = 0.88772
 %BIC: sigma = 1.1721, eps = 0.17433, C = 2.9209
 %% Grid search for RVR
-ttratio = 0.75;
-nfold   = 50;
-% Define kernel, hp
-kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
-% Define range of hyperparameters
-sigma   = logspace(-1.5, 1, 15);
-% Perform gridsearch
-grid_search_cv(Dataset, 'RVR', ttratio, nfold, kernelstr, sigma);
+% ttratio = 0.5;
+% nfold   = 10;
+% % Define kernel, hp
+% kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
+% % Define range of hyperparameters
+% sigma   = logspace(-0.5, 1, 20);
+% % Perform gridsearch
+% grid_search_cv(Dataset, 'RVR', ttratio, nfold, kernelstr, sigma);
 
 %Optimal params for:
 %MSE: sigma = 0.56
@@ -114,12 +116,12 @@ grid_search_cv(Dataset, 'RVR', ttratio, nfold, kernelstr, sigma);
 
 % define kernel
 % grid_search_cv() -> C-SVR  : eps, C, sigma -> colormap two versus one opt
-%                  -> nu-SVR : nu, C, sigma -> colormap two versus one opt 
-%                  -> RVR    : sigma -> 1d plot 
-% with MSE, AIC & BIC 
+%                  -> nu-SVR : nu, C, sigma -> colormap two versus one opt
+%                  -> RVR    : sigma -> 1d plot
+% with MSE, AIC & BIC
 
-% kernel engineer 
-% design polynomial (sum, ..) kernel 
+% kernel engineer
+% design polynomial (sum, ..) kernel
 
 %% Sparsity vs MSE curves
 k_rvr_BIC = generate_kernel('rbf',1.28);
@@ -152,5 +154,5 @@ nfold   = 50;
 sparsity_vs_mse(Dataset, models, nfold, ttratio)
 
 % computation time, memory (see doc, tic toc)
-%% IDEAS : 
-% -SVR : try to 'impose' through nu-svr the same number of RV as in RVM to compare performance at equel level of sparsity  
+%% IDEAS :
+% -SVR : try to 'impose' through nu-svr the same number of RV as in RVM to compare performance at equel level of sparsity
