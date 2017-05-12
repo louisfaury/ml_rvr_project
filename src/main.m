@@ -25,12 +25,12 @@ load(strcat('dataset_',name,'.mat'));
 %% Support Vector Regression 
 % Define kernel, hp
 kernelstr = 'rbf'; % 'rbf', 'polynomial', 'linear'
-kernel = generate_kernel(kernelstr, 0.25);
+kernel = generate_kernel(kernelstr, 1.1288);
 
 % defines svr type
 type = 'nu'; % 'C', 'nu'
-C = 200;
-param = 0.15; %represents either epsilon or nu depending on the type
+C = 5;
+param = 0.19; %represents either epsilon or nu depending on the type
 
 % call SVR 
 plot_flag = 1;
@@ -39,19 +39,19 @@ model = train_model(Dataset,model,plot_flag);
 
 %% Relevance Vector Regression
 %Define kernel, hp
-% kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
-% width = 1.35;
-% kernel = generate_kernel(kernelstr, width);
-% 
-% % define alpha and beta
-% % Assume alpha is a numerical value and is the same for each point
-% alpha = 0.1;
-% beta = 0.1;
-% 
-% model = generate_RVR(kernel,alpha,beta,'RVR');
-% % call RVR
-% plot_flag = 0;
-% model = train_model(Dataset,model,plot_flag);
+kernelstr = 'rbf'; % 'gaussian', 'polynomial', 'linear'
+width = 1.35;
+kernel = generate_kernel(kernelstr, width);
+
+% define alpha and beta
+% Assume alpha is a numerical value and is the same for each point
+alpha = 0.1;
+beta = 0.1;
+
+model = generate_RVR(kernel,alpha,beta,'RVR');
+% call RVR
+plot_flag = 1;
+model = train_model(Dataset,model,plot_flag);
 
 %% Cross-validation, evaluative plots
 % Cross-validation
@@ -102,6 +102,7 @@ grid_search_cv(Dataset, 'SVR', ttratio, nfold, kernelstr, type, eps, C, sigma);
 %Optimal params for:
 %MSE: sigma = 0.92367, eps = 0.085317, C = 0.88772
 %BIC: sigma = 1.1721, eps = 0.17433, C = 2.9209
+
 %% Grid search for RVR
 % ttratio = 0.5;
 % nfold   = 10;
@@ -142,13 +143,13 @@ models = [models generate_RVR(k_rvr_BIC,100,0.3, 'RVR MSE/BIC')];
 %Optimal RVR model for MSE
 %models = [models generate_RVR(k_rvr_MSE,1,0.3, 'RVR BIC')];
 %Optimal nu SVR model for BIC
-models = [models generate_SVR('nu',k_nusvr_BIC, 3.7927, 0.032263, 'NU SVR BIC')];
+models = [models generate_SVR('nu',k_nusvr_BIC, 3.7927, 0.032263, '$\nu$-SVR BIC')];
 %Optimal nu SVR model for MSE
-models = [models generate_SVR('nu',k_nusvr_MSE, 5.1348, 0.19737, 'NU SVR MSE')];
+models = [models generate_SVR('nu',k_nusvr_MSE, 5.1348, 0.19737, '$\nu$-SVR MSE')];
 %Optimal C SVR for BIC
-models = [models generate_SVR('C',k_csvr_BIC, 2.9209, 0.17433, 'C SVR BIC')];
+models = [models generate_SVR('C',k_csvr_BIC, 2.9209, 0.17433, '$\varepsilon$-SVR BIC')];
 %Optimal C SVR for MSE
-models = [models generate_SVR('C',k_csvr_MSE, 0.88772, 0.085317, 'C SVR MSE')];
+models = [models generate_SVR('C',k_csvr_MSE, 0.88772, 0.085317, '$\varepsilon$-SVR MSE')];
  
 ttratio = 0.75;
 nfold   = 50;

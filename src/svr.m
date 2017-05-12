@@ -56,7 +56,8 @@ if (f)
         eps = mean(abs(targets(tube_boundary_points_ind)-l));
     end
     
-    x = (xmin:0.1:xmax)';
+    %x = (xmin:0.1:xmax)';
+    x = [-10:0.1:10]';
     y = true_f(x);
     label = svmpredict(ones(size(x,1),1),x,model,'-q');
     figure

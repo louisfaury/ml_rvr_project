@@ -31,6 +31,7 @@ switch k.name
     case 'rbf'
        C = inputs; 
        BASIS = exp(-distSquared(inputs,C)/(k.params.width^2));
+       BASIS = [BASIS,ones(n,1)];
     otherwise 
         error('Unknown kernel');
 end
@@ -42,7 +43,7 @@ end
 [Parameter, Hyperparameter, Diagnostic] = ...
     SparseBayes('Gaussian', BASIS, targets);
 
-w_infer						= zeros(n,1);
+w_infer						= zeros(n+1,1);
 w_infer(Parameter.Relevant)	= Parameter.Value;
 
 switch k.name 
@@ -51,7 +52,7 @@ switch k.name
     case 'polynomial'
        predict = @(x) w_infer(Parameter.Relevant)' * ((inputs(Parameter.Relevant,:) * x).^k.params.degree);
     case 'rbf'
-       predict = @(x) w_infer(Parameter.Relevant)' * exp(-distSquared(inputs(Parameter.Relevant,:),x)/(k.params.width^2));
+       predict = @(x) compute_gram_matrix(k,x,inputs)*w_infer;
     otherwise 
        error('Unknown kernel');
 end
@@ -60,7 +61,8 @@ model = struct('Parameter', Parameter, 'Hyperparameter', Hyperparameter, 'Diagno
 
 % plot
 if (f)
-    x = (xmin:0.1:xmax)';
+    %x = (xmin:0.1:xmax)';
+    x = [-10:0.01:10]';
     y = true_f(x);
     
     label = predict(x);
@@ -77,12 +79,12 @@ if (f)
     A = diag(a);
     K = compute_gram_matrix(k,inputs,inputs);
     Sigma = inv(A + Hyperparameter.beta*(K'*K));
-    % m = Hyperparameter.beta * Sigma *( K' * targets); % can be used for prediction
+    %m = Hyperparameter.beta * Sigma *( K' * targets); % can be used for prediction
     Kx = compute_gram_matrix(k,x,inputs);
     proj_std = sqrt(1/Hyperparameter.beta*ones(size(x)) +  diag(Kx * Sigma * Kx'));
     % plot support vectors
-    p1 = scatter(inputs(Parameter.Relevant), targets(Parameter.Relevant),80*ones(size(inputs((Parameter.Relevant)))),'o','MarkerEdgeColor', 'g', 'MarkerFaceColor', 'w','LineWidth',1.5);
-    scatter(inputs(Parameter.Relevant), targets(Parameter.Relevant),30*ones(size(inputs((Parameter.Relevant)))),'MarkerFaceColor','r','MarkerFaceAlpha',0.8,'MarkerEdgeColor','r','MarkerEdgeAlpha',0.8);
+  %  p1 = scatter(inputs(Parameter.Relevant), targets(Parameter.Relevant),80*ones(size(inputs((Parameter.Relevant)))),'o','MarkerEdgeColor', 'g', 'MarkerFaceColor', 'w','LineWidth',1.5);
+  %  scatter(inputs(Parameter.Relevant), targets(Parameter.Relevant),30*ones(size(inputs((Parameter.Relevant)))),'MarkerFaceColor','r','MarkerFaceAlpha',0.8,'MarkerEdgeColor','r','MarkerEdgeAlpha',0.8);
     % plot dataset
     p2 = scatter(inputs, targets,30*ones(size(inputs)),'MarkerFaceColor','r','MarkerFaceAlpha',0.4,'MarkerEdgeColor','r','MarkerEdgeAlpha',0.4);
     % plot reference function
@@ -93,7 +95,7 @@ if (f)
     %p5 = plot(x,label+proj_std', '-.','Color',[0.3 0.6 1], 'LineWidth',2.2);
     %area(x,label+proj_std',);
     %plot(x,label-proj_std', '-.','Color',[0.3 0.6 1], 'LineWidth',2.2);
-    p5 = jbfill(x',label+proj_std',label-proj_std','b',[1 1 1],0,0.1);
+    p5 = jbfill(x',label'+proj_std',label'-proj_std','b',[1 1 1],0,0.1);
 
     xlabel('Input')
     ylabel('Output')
