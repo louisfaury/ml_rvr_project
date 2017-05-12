@@ -34,7 +34,7 @@ for j=1:nb_folds
                 
             case 'RVR'
                 model = rvr(train_fold, models(i).kernel, models(i).params,false);
-                label = model.predict(test_fold.inputs)';
+                label = model.predict(test_fold.inputs);
                 
             otherwise
                 error('Unknown method');
