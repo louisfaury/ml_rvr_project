@@ -42,9 +42,8 @@ model = train_model(Dataset,model,plot_flag);
 kernelstr = 'rbf';                             % 'rbf', 'polynomial', 'linear'
 width = 1.35;
 kernel = generate_kernel(kernelstr, width);
-alpha = 0.1;                                    % initial alpha 
-beta = 0.1;
-
+alpha = 0.1;                                    % initial alpha
+beta = 0.1;                                     % initial beta 
 model = generate_RVR(kernel,alpha,beta,'RVR');
 % call RVR
 plot_flag = 1;
@@ -52,40 +51,40 @@ model = train_model(Dataset,model,plot_flag);
 
 
 %% GRID-SEARCH CROSS-VALIDATION FOR NU-SVR (rbf kernel)
-n_fold = 10;        % folds
-tt_ratio = 0.5;     % training-testing ratio
-% Defines grid search range : 
-nu      = linspace(0.001, 0.1, 20);
-C       = logspace(-1, 1.5, 20);
-sigma   = logspace(-2, 1, 20);
-grid_search_cv(Dataset, 'SVR', tt_ratio, n_fold, 'rbf', 'nu', nu, C, sigma); % performs grid search
-% Optimal params are :
-%       MSE: sigma = 1.1288, nu = 0.19737, C = 5.1348
-%       BIC: sigma = 1.1288, nu = 0.032263, C = 3.7927
+% n_fold = 10;        % folds
+% tt_ratio = 0.5;     % training-testing ratio
+% % Defines grid search range : 
+% nu      = linspace(0.001, 0.1, 20);
+% C       = logspace(-1, 1.5, 20);
+% sigma   = logspace(-2, 1, 20);
+% grid_search_cv(Dataset, 'SVR', tt_ratio, n_fold, 'rbf', 'nu', nu, C, sigma); % performs grid search
+% % Optimal params are :
+% %       MSE: sigma = 1.1288, nu = 0.19737, C = 5.1348
+% %       BIC: sigma = 1.1288, nu = 0.032263, C = 3.7927
 
 
 %% GRID-SEARCH CROSS-VALIDATION FOR C-SVR (rbf kernel)
-n_fold = 50;        % folds
-tt_ratio = 0.75;    % training-testing ratio 
-% Defines grid search range :
-eps     = logspace(-2, 1, 30);
-C       = logspace(-1, 1.5, 30);
-sigma   = logspace(-2, 1, 30);
-grid_search_cv(Dataset, 'SVR', tt_ratio, n_fold, 'rbf', 'C', eps, C, sigma); % performs grid search
-% Optimal params for:
-%       MSE: sigma = 0.92367, eps = 0.085317, C = 0.88772
-%       BIC: sigma = 1.1721, eps = 0.17433, C = 2.9209
+% n_fold = 50;        % folds
+% tt_ratio = 0.75;    % training-testing ratio 
+% % Defines grid search range :
+% eps     = logspace(-2, 1, 30);
+% C       = logspace(-1, 1.5, 30);
+% sigma   = logspace(-2, 1, 30);
+% grid_search_cv(Dataset, 'SVR', tt_ratio, n_fold, 'rbf', 'C', eps, C, sigma); % performs grid search
+% % Optimal params for:
+% %       MSE: sigma = 0.92367, eps = 0.085317, C = 0.88772
+% %       BIC: sigma = 1.1721, eps = 0.17433, C = 2.9209
 
 
 %% GRID-SEARCH CROSS-VALIDATION FOR RVR (rbf kernel)
-tt_ratio = 0.5;  % trainig_testing ratio 
-n_fold   = 10;   % fold 
-% Defines range of hyperparameters
-sigma  = logspace(-0.5, 1, 20);
-grid_search_cv(Dataset, 'RVR', tt_ratio, n_fold, 'rbf', sigma);
-% Optimal params for:
-%       MSE: sigma = 0.56
-%       BIC: sigma = 1.28
+% tt_ratio = 0.5;  % trainig_testing ratio 
+% n_fold   = 10;   % fold 
+% % Defines range of hyperparameters
+% sigma  = logspace(-0.5, 1, 20);
+% grid_search_cv(Dataset, 'RVR', tt_ratio, n_fold, 'rbf', sigma);
+% % Optimal params for:
+% %       MSE: sigma = 0.56
+% %       BIC: sigma = 1.28
 
 
 %% PLOT 'ROC' CRUVES : SPARSITY VS MSE
@@ -95,13 +94,9 @@ k_csvr_BIC  = generate_kernel('rbf',1.1721);
 k_csvr_MSE  = generate_kernel('rbf',0.92367);
 k_nusvr_BIC = generate_kernel('rbf',1.1288);
 k_nusvr_MSE = generate_kernel('rbf',1.1288);
-%MSE: sigma = 1.1288, nu = 0.19737, C = 5.1348
-%BIC: sigma = 1.1288, nu = 0.032263, C = 3.7927
 models = [];
 % Optimal RVR model for BIC
 models = [models generate_RVR(k_rvr_BIC,100,0.3, 'RVR MSE/BIC')];
-% Optimal RVR model for MSE
-%models = [models generate_RVR(k_rvr_MSE,1,0.3, 'RVR BIC')];
 % Optimal nu SVR model for BIC
 models = [models generate_SVR('nu',k_nusvr_BIC, 3.7927, 0.032263, '$\nu$-SVR BIC')];
 %Optimal nu SVR model for MSE
