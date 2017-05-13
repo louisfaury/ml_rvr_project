@@ -38,8 +38,7 @@ for j=1:nb_folds
                 
             otherwise
                 error('Unknown method');
-        end
-       
+        end       
         mse(j,i)  = mean((test_fold.outputs - label).^2);
         
         switch models(i).type

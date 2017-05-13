@@ -15,7 +15,7 @@ addpath(genpath('../datasets'));
 addpath(genpath('../lib'))
 
 
-%% LOAD DATASET
+%% s1.LOAD DATASET
 % Loads 'sinc' dataset
 name = 'sinc';
 % Loads 'airfoils' dataset
@@ -23,7 +23,7 @@ name = 'sinc';
 load(strcat('dataset_',name,'.mat'));
 
 
-%% SUPPORT VECTOR REGRESSION -- uncomment for a test run (train+predict) 
+%% s2.SUPPORT VECTOR REGRESSION -- uncomment for a test run (train+predict) 
 % Defines kernel and its hyperparameters
 kernelstr = 'rbf';                              % 'rbf', 'polynomial', 'linear'
 kernel = generate_kernel(kernelstr, 1.1288);
@@ -37,7 +37,7 @@ model = generate_SVR(type, kernel, C, param, 'SVR');
 model = train_model(Dataset,model,plot_flag);
 
 
-%% RELEVANCE VECTOR REGRESSION -- uncomment for a test run (train+predict)
+%% s3.RELEVANCE VECTOR REGRESSION -- uncomment for a test run (train+predict)
 % Defines base functions and its hyperparameters
 kernelstr = 'rbf';                             % 'rbf', 'polynomial', 'linear'
 width = 1.35;
@@ -50,7 +50,24 @@ plot_flag = 1;
 model = train_model(Dataset,model,plot_flag);
 
 
-%% GRID-SEARCH CROSS-VALIDATION FOR NU-SVR (rbf kernel)
+%% s4.BIC METRIC TESTING 
+% Shows the tradeoff found by our BIC measure on the artificial dataset,
+% on a nu-SVR example 
+models = [];
+k_nusvr_BIC = generate_kernel('rbf',1.1288);
+k_nusvr_MSE = generate_kernel('rbf',1.1288);
+
+if (strcmp('sinc',name))
+    % Optimal nu-SVR model for BIC
+    models = [models generate_SVR('nu',k_nusvr_BIC, 3.7927, 0.032263, 'BIC $\star$')];
+    % Optimal nu-SVR model for MSE
+    models = [models generate_SVR('nu',k_nusvr_MSE, 5.1348, 0.19737, 'MSE $\star$')];
+    % Some arbitrary nu-SVR models 
+    models = [models,generate_inrange_model('nu',0.5,3,0.1,20,0.05,0.3)];
+end
+sparsity_vs_mse(Dataset, models,10,0.75,[1,2]);
+
+%% s5.GRID-SEARCH CROSS-VALIDATION FOR NU-SVR (rbf kernel)
 % n_fold = 10;        % folds
 % tt_ratio = 0.5;     % training-testing ratio
 % % Defines grid search range : 
@@ -63,7 +80,7 @@ model = train_model(Dataset,model,plot_flag);
 % %       BIC: sigma = 1.1288, nu = 0.032263, C = 3.7927
 
 
-%% GRID-SEARCH CROSS-VALIDATION FOR C-SVR (rbf kernel)
+%% s6.GRID-SEARCH CROSS-VALIDATION FOR C-SVR (rbf kernel)
 % n_fold = 50;        % folds
 % tt_ratio = 0.75;    % training-testing ratio 
 % % Defines grid search range :
@@ -76,7 +93,7 @@ model = train_model(Dataset,model,plot_flag);
 % %       BIC: sigma = 1.1721, eps = 0.17433, C = 2.9209
 
 
-%% GRID-SEARCH CROSS-VALIDATION FOR RVR (rbf kernel)
+%% s7.GRID-SEARCH CROSS-VALIDATION FOR RVR (rbf kernel)
 % tt_ratio = 0.5;  % trainig_testing ratio 
 % n_fold   = 10;   % fold 
 % % Defines range of hyperparameters
@@ -87,25 +104,25 @@ model = train_model(Dataset,model,plot_flag);
 % %       BIC: sigma = 1.28
 
 
-%% PLOT 'ROC' CRUVES : SPARSITY VS MSE
-k_rvr_BIC   = generate_kernel('rbf',1.28);
-k_rvr_MSE   = generate_kernel('rbf',0.56);
-k_csvr_BIC  = generate_kernel('rbf',1.1721);
-k_csvr_MSE  = generate_kernel('rbf',0.92367);
-k_nusvr_BIC = generate_kernel('rbf',1.1288);
-k_nusvr_MSE = generate_kernel('rbf',1.1288);
-models = [];
-% Optimal RVR model for BIC
-models = [models generate_RVR(k_rvr_BIC,100,0.3, 'RVR MSE/BIC')];
-% Optimal nu SVR model for BIC
-models = [models generate_SVR('nu',k_nusvr_BIC, 3.7927, 0.032263, '$\nu$-SVR BIC')];
-%Optimal nu SVR model for MSE
-models = [models generate_SVR('nu',k_nusvr_MSE, 5.1348, 0.19737, '$\nu$-SVR MSE')];
-%Optimal C SVR for BIC
-models = [models generate_SVR('C',k_csvr_BIC, 2.9209, 0.17433, '$\varepsilon$-SVR BIC')];
-%Optimal C SVR for MSE
-models = [models generate_SVR('C',k_csvr_MSE, 0.88772, 0.085317, '$\varepsilon$-SVR MSE')];
-% Generates plots : 
-tt_ratio = 0.75;
-n_fold   = 50;
-sparsity_vs_mse(Dataset, models, n_fold, tt_ratio)
+%% s8.PLOT 'ROC' CRUVES : SPARSITY VS MSE
+% k_rvr_BIC   = generate_kernel('rbf',1.28);
+% k_rvr_MSE   = generate_kernel('rbf',0.56);
+% k_csvr_BIC  = generate_kernel('rbf',1.1721);
+% k_csvr_MSE  = generate_kernel('rbf',0.92367);
+% k_nusvr_BIC = generate_kernel('rbf',1.1288);
+% k_nusvr_MSE = generate_kernel('rbf',1.1288);
+% models = [];
+% % Optimal RVR model for BIC
+% models = [models generate_RVR(k_rvr_BIC,100,0.3, 'RVR MSE/BIC')];
+% % Optimal nu SVR model for BIC
+% models = [models generate_SVR('nu',k_nusvr_BIC, 3.7927, 0.032263, '$\nu$-SVR BIC')];
+% %Optimal nu SVR model for MSE
+% models = [models generate_SVR('nu',k_nusvr_MSE, 5.1348, 0.19737, '$\nu$-SVR MSE')];
+% %Optimal C SVR for BIC
+% models = [models generate_SVR('C',k_csvr_BIC, 2.9209, 0.17433, '$\varepsilon$-SVR BIC')];
+% %Optimal C SVR for MSE
+% models = [models generate_SVR('C',k_csvr_MSE, 0.88772, 0.085317, '$\varepsilon$-SVR MSE')];
+% % Generates plots : 
+% tt_ratio = 0.75;
+% n_fold   = 50;
+% sparsity_vs_mse(Dataset, models,50,0.75); % 50-fold with 0.75 training test ratio
