@@ -63,9 +63,10 @@ if (strcmp('sinc',name))
     % Optimal nu-SVR model for MSE
     models = [models generate_SVR('nu',k_nusvr_MSE, 5.1348, 0.19737, 'MSE $\star$')];
     % Some arbitrary nu-SVR models 
-    models = [models,generate_inrange_model('nu',0.5,3,0.1,20,0.05,0.3)];
+    models = [models,generate_inrange_model('nu',0.5,1.5,1,10,0.02,0.15)];
+
+    sparsity_vs_mse(Dataset, models,10,0.75,[1,2]);
 end
-sparsity_vs_mse(Dataset, models,10,0.75,[1,2]);
 
 %% s5.GRID-SEARCH CROSS-VALIDATION FOR NU-SVR (rbf kernel)
 % n_fold = 10;        % folds
