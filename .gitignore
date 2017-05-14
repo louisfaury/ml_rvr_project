@@ -23,4 +23,3 @@ report/*
 !/report/*.sty
 !/report/Images/
 !/report/Images/*.png
-!/report/*.pdf
