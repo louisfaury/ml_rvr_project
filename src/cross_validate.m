@@ -1,4 +1,4 @@
-function [mse, BIC, relevants] = cross_validate(ds, models, nb_folds, training_ratio, plotflag)
+function [mse, BIC, relevants] = cross_validate(ds, models, nb_folds, training_ratio, variance, plotflag)
 % ============= HEADER ============= %
 % \brief   - Performs cross validation and plots the result for all models
 % \param   - ds <- dataset
@@ -14,6 +14,7 @@ function [mse, BIC, relevants] = cross_validate(ds, models, nb_folds, training_r
 %                       }
 %          - nb_folds  <- number of folds for CV
 %          - training_ratio  <- ratio of training examples
+%          - variance <- estimated output variance for BIC
 
 % \returns - mse <- the mse matrix for each model on each fold
 %            BIC <- BIC metric
@@ -44,10 +45,10 @@ for j=1:nb_folds
         switch models(i).type
             case 'SVR'
                 nRelevant = model.totalSV;
-                BIC(j,i) = 100*ds.numPoints*mse(j,i) + nRelevant*log(ds.numPoints);
+                BIC(j,i) = 1/variance*ds.numPoints*mse(j,i) + nRelevant*log(ds.numPoints);
             case 'RVR'
                 nRelevant = length(model.Parameter.Relevant);
-                BIC(j,i) = 100*ds.numPoints*mse(j,i) + nRelevant*log(ds.numPoints);
+                BIC(j,i) = 1/variance*ds.numPoints*mse(j,i) + nRelevant*log(ds.numPoints);
             otherwise
                 error('Unknown method')
         end
