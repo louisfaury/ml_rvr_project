@@ -7,7 +7,7 @@ function models = generate_inrange_model(type,kernelparam_min,kernelparam_max,ty
 %          - typeparam  <- min and max for different values of the method
 % ============= HEADER ============= %
 
-gc          = 7; % grid coarseness
+gc          = 10; % grid coarseness
 %kernelparam = kernelparam_min + (kernelparam_max-kernelparam_min)*rand(1,gc);
 %typeparam_1 = typeparam_1_min + (typeparam_1_max-typeparam_2_min)*rand(1,gc);
 %typeparam_2 = typeparam_2_min + (typeparam_2_min-typeparam_2_min)*rand(1,gc);

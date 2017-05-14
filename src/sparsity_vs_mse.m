@@ -37,9 +37,13 @@ set(gca, 'FontSize', 10);
 xlim([0, 0.6])
 
 if exist('highlight_arr','var')
-   a = scatter(nRelevant,mmse,50*ones(n_models,1),[0.2 0.5 1],'filled');
-   b = scatter(nRelevant(highlight_arr),mmse(highlight_arr),100*ones(1,length(highlight_arr)),[1 0 0],'LineWidth',2);
-   text(nRelevant(highlight_arr)-0.01+dx, mmse(highlight_arr)-0.005,{names{highlight_arr}},'FontSize',13,'FontWeight','bold');
+   colors = autumn(10);
+   colormap(colors(1:5,:));
+   [mmse_sort,index] = sort(mmse);
+   nRelevant_sort = nRelevant(index);
+   a = scatter(nRelevant_sort,mmse_sort,50*ones(n_models,1),(1:length(nRelevant)),'filled');
+   b = scatter(nRelevant(highlight_arr),mmse(highlight_arr),100*ones(1,length(highlight_arr)),[0 0 1],'LineWidth',2);
+   text(nRelevant(highlight_arr)-0.01+dx, mmse(highlight_arr)-0.001,{names{highlight_arr}},'FontSize',13,'FontWeight','bold');
    h = legend([a,b],{'With arbitrary (\nu,C,\sigma)','Optimal (\nu,C,\sigma)'});
    set(h,'FontSize',13);
 else
