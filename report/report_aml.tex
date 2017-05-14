@@ -168,7 +168,7 @@
 			}
 		}
 	}
-	\section{Results}
+	\section{Experimental results}
 	{
 		\subsection{Datasets presentation}
 		{
@@ -223,7 +223,7 @@
 				\end{center}	
 			}
 		}
-		\subsection{}
+		\subsection{Implementation}
 		{
 			We hereinafter describe different computations and results obtained on the artificial data with both the SVR and the RVR. Discussion on the two methods advantages and drawback will be held in the next section.
 			
@@ -252,7 +252,7 @@
 			}
 			\subsubsection{Relevance Vector Regression}
 			{
-				A similar work was conducted with the RVR. The same kernel (RBF) was used. Therefore, the only hyper-parameter to be fixed is the kernel's width $\sigma$ (since automatic relevance detection automatically finds the best $\beta$ and $\alpha$). For regression, we plot the mean of the \emph{predictive distribution} as well as it's standard deviation (see (\ref{eq::predictive})).
+				A similar work was conducted with the RVR, by using the \texttt{SparseBayes} library written by Mike Tipping. The same kernel (RBF) was used. Therefore, the only hyper-parameter to be fixed is the kernel's width $\sigma$ (since automatic relevance detection automatically finds the best $\beta$ and $\alpha$). For regression, we plot the mean of the \emph{predictive distribution} as well as it's standard deviation (see (\ref{eq::predictive})).
 				
 				\begin{figure}
 					\begin{center}
@@ -266,25 +266,30 @@
 		}
 		\subsection{Cross-validation}
 		{
-			\subsubsection{Artificial dataset}
+			\subsubsection{A sparse regression evaluative metric}
 			{
-			To assess best hyper-parameters for all three algorithms ($\epsilon$-SVR, $\nu$-SVR and RVR), grid search was performed using 50-fold cross validations. Training test ratio was set to 0.75. Chosen metric to evaluate performance of the algorithms is derived from the BIC (Bayesian Information Criterion). Among the properties of such metric is the ability to evaluate a compromise between complexity and likelihood of the different models. Compared to a metric like Mean Square Error, it therefore tends to favor model sparsity which is one of the main advantages of studied regression algorithms.
-			
-			General formula for BIC is:
+			To infer the best hyper-parameters for all three algorithms ($\epsilon$-SVR, $\nu$-SVR and RVR), grid-search cross-validation is used. The metric we used to evaluate performance of the algorithms is derived from the BIC (Bayesian Information Criterion, see \cite{bishop2006pattern}). Among the properties of this metric is the ability to evaluate a compromise between complexity and likelihood of different models. We want to reproduce this characteristic to evaluate the performance versus sparsity tradeoff found by different models. The following lines intent to motivate the metric we chose to use. 
+			\newline
+			The general formula of the BIC metric  is:
 			\begin{equation}
 				BIC = -2ln(L) + kln(N)
 			\end{equation}
-			where $L$ corresponds to the likelihood of the model, $k$ is the number of parameters of the model and $N$ is the number of datapoints. In the case of RVR and SVR, number of parameters $k$ is directly proportional to the number  of relevant vectors and respectively support vectors. In both cases we relate likelihood of models to the Mean Square Error (MSE) as such:
+			where $L$ corresponds to the likelihood of the model, $k$ is the number of parameters of the model and $N$ is the number of data-points. In the particular case we wish to tackle (measuring a trade-off between regression performance and sparsity), the BIC appears to be a reasonable metric, although some adjustments are needed to adapt it to a regression task. 
+			\newline In the case of RVR and SVR, the number of parameters $k$ is directly proportional to the number of relevant vectors (respectively support vectors). Assuming independent, normally distributed noise, the likelihood can directly be related to the Mean Square Error (MSE) :
 			\begin{equation}
-				ln(L) = -\frac{N}{2\sigma^2_{noise}}MSE
+				ln(L) = -\frac{N}{2\sigma^2}MSE
 			\end{equation}
-			where $\sigma^2_{noise}$ corresponds to the variance of dataset noise.
-			
-			For SVR, number of model parameters corresponds to the number of non-zero coefficients  $\alpha_i$ and $\alpha_i^*$ \textbf{Plutot $\hat{alpha}$ non? Et a quel point ça fait vraiment 2 free parameters sachant que c'est plutot leur }. $k$ is therefore equals to twice the number of support vectors  ($N_{SV}$)so that:
+			where $\sigma^2$ corresponds to the variance of the dataset's noise. Therefore a reasonable metric to measure the goodness of a sparse regression model would be 
 			\begin{equation}
-				BIC_{SVR} =  \frac{MSE}{\sigma^2_{noise}} + 2N_{SV}ln(M)
+				BICSR =  N\frac{MSE}{\sigma^2} + N_{SV}ln(N)
 			\end{equation}
+			where ${N_{SV}}$ is the number of relevance (or support) vectors, and $BICSR$ holds for Bayesian Information Criterion for Sparse Regression. Minimizing this metric indeed implies minimizing the MSE while linearly penalizing the number of support vectors. Some other kind of penalization (quadratic, exponential) could also be used. The discussion of the choice of this penalization, as well as the validation of the well behavior of this metric is held in (\ref{section::discussion}). 
 			
+			We wish to emphasize the fact that this metric is not the commonly used BIC metric, but rather an adaptation of it to sparse regression (and therefore a measure of trade-off between performance (MSE) and sparsity).
+			}
+			\subsubsection{Grid-search cross-validation}
+			{
+				In the following, we performed 50-fold cross-validation with a 0.75 training-test ratio, using the $BICSR$ previously defined.
 				\begin{figure}
 					\begin{center}
 						\includegraphics[width=0.85\linewidth]{gridsearch_epsSVR}
@@ -301,12 +306,7 @@
 					\end{center}
 				\end{figure}
 			
-			Figures (\ref{fig::gridSearch_epsSVR_sinc}) and (\ref{fig::gridSearch_nuSVR_sinc}) display grid search results for both $\epsilon$-SVR and $\nu$-SVR in the form of a heat-map. As expected (\textbf{Are they the ones of figures 3 and 4?})both selected models are almost the same therefore showing the equivalence between both approaches. Both lead to a total of 14 support vectors.\\
-			
-			For RVR, the number of free parameters $k$ corresponds to the non zero coefficients $w_i$ of the relevant vectors. It is therefore equals to $N_{RV}$, the number of relevant vectors. As a consequence, BIC for RVR writes:
-			\begin{equation}
-				BIC_{RVR} =  \frac{MSE}{\sigma^2_{noise}} + N_{RV}ln(M)
-			\end{equation}
+			Figures (\ref{fig::gridSearch_epsSVR_sinc}) and (\ref{fig::gridSearch_nuSVR_sinc}) display grid search results for both $\epsilon$-SVR and $\nu$-SVR in the form of heat-maps. As expected both selected models are almost the same therefore showing the equivalence between both approaches. Both lead to a total of 14 support vectors.
 			
 				\begin{figure}
 					\begin{center}
@@ -315,8 +315,7 @@
 						\label{fig::gridSearch_RVR_sinc}
 					\end{center}
 				\end{figure}
-			
-			Figure (\ref{fig::gridSearch_RVR_sinc}) displays grid-search results over kernel width $\sigma$, the only hyperparameter.
+			Figure (\ref{fig::gridSearch_RVR_sinc}) displays grid-search results for the RVR over kernel width $\sigma$, the only hyperparameter for this method. 
 			
 			\begin{figure}
 				\begin{center}
@@ -326,7 +325,10 @@
 				\end{center}
 			\end{figure}
 			
-			The $BIC$ criterion is a way to take model complexity into account when choosing an appropriate model. In our setting, the complexity is governed by the number of support vectors used and we are interested in the relationship between sparsity (the more support vectors the more complex the function can be) and performance (measured by the $MSE$). We analyze this tradeoff in figure \ref{fig::ROC_sinc} for the $sinc$ dataset. We can see that in terms of pure $MSE$ minimization both $\nu-SVR$ and $C-SVR$ perform slightly better than $RVR$ but at a very high cost in terms of sparsity since they have respectively $3$ and almost $5$ times more support vectors. For the hyperparameters that minimize the $BIC$ criterion, $SVR$ achieves a sparsity that is comparable to that of $RVR$ (although still there are still more support vectors) but this comes at the cost of a sharp rise of the $MSE$ of around $10\%$ for the $\nu-SVR$ and almost $50\%$ for the $C-SVR$. We can conclude that $RVR$ should be prefered as soon as the sparsity of the model is a concern.
+			% TODO : some more commenting over the different figures (presence of a well and plateau, .. )
+			% TODO : motivate bounds
+			% TODO : use the following rather in the discussion part 
+%			The $BIC$ criterion is a way to take model complexity into account when choosing an appropriate model. In our setting, the complexity is governed by the number of support vectors used and we are interested in the relationship between sparsity (the more support vectors the more complex the function can be) and performance (measured by the $MSE$). We analyze this tradeoff in figure \ref{fig::ROC_sinc} for the $sinc$ dataset. We can see that in terms of pure $MSE$ minimization both $\nu-SVR$ and $C-SVR$ perform slightly better than $RVR$ but at a very high cost in terms of sparsity since they have respectively $3$ and almost $5$ times more support vectors. For the hyperparameters that minimize the $BIC$ criterion, $SVR$ achieves a sparsity that is comparable to that of $RVR$ (although still there are still more support vectors) but this comes at the cost of a sharp rise of the $MSE$ of around $10\%$ for the $\nu-SVR$ and almost $50\%$ for the $C-SVR$. We can conclude that $RVR$ should be prefered as soon as the sparsity of the model is a concern.
 			}
 							
 			\subsection{Real dataset}
@@ -351,7 +353,7 @@
 	}
 	\section{Discussion}
 	{
-
+		\label{section::discussion}
 	}
 	\section{Conclusion}
 	{
