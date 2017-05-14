@@ -52,37 +52,37 @@ load(strcat('dataset_',name,'.mat'));
 
 
 %% s4.BIC METRIC TESTING 
-% Shows the tradeoff found by our BIC measure on the artificial dataset,
-% on a nu-SVR example 
-models = [];
-k_nusvr_BIC = generate_kernel('rbf',1.1288);
-k_nusvr_MSE = generate_kernel('rbf',1.1288);
-
-if (strcmp('sinc',name))
-    % Optimal nu-SVR model for BIC
-    models = [models generate_SVR('nu',k_nusvr_BIC, 3.7927, 0.032263, 'BIC $\star$')];
-    % Optimal nu-SVR model for MSE
-    models = [models generate_SVR('nu',k_nusvr_MSE, 5.1348, 0.19737, 'MSE $\star$')];
-    % Optimal nu-SVR model for BIC k^2 ln N
-    models = [models generate_SVR('nu',k_nusvr_MSE, 1.5283, 0.037474, 'BIC squared')];
-    % Optimal nu-SVR model for BIC sqrt(k) ln N
-    models = [models generate_SVR('nu',k_nusvr_MSE, 17.2521, 0.084368, 'BIC sqrt')];
-    % Optimal nu-SVR model for BIC k ln k
-    models = [models generate_SVR('nu',k_nusvr_MSE, 2.8014, 0.068737, 'BIC k lnk')];
-
-    % Some arbitrary nu-SVR models 
-    models = [models,generate_inrange_model('nu',0.5,1.5,1,10,0.02,0.15)];
-    
-    sparsity_vs_mse(Dataset, models,10,0.75,[1,2,3,4,5]);
-end
+% % Shows the tradeoff found by our BIC measure on the artificial dataset,
+% % on a nu-SVR example 
+% models = [];
+% k_nusvr_BIC = generate_kernel('rbf',1.1288);
+% k_nusvr_MSE = generate_kernel('rbf',1.1288);
+% 
+% if (strcmp('sinc',name))
+%     % Optimal nu-SVR model for BIC
+%     models = [models generate_SVR('nu',k_nusvr_BIC, 3.7927, 0.032263, 'BIC $\star$')];
+%     % Optimal nu-SVR model for MSE
+%     models = [models generate_SVR('nu',k_nusvr_MSE, 5.1348, 0.19737, 'MSE $\star$')];
+%     % Optimal nu-SVR model for BIC k^2 ln N
+%     models = [models generate_SVR('nu',k_nusvr_MSE, 1.5283, 0.037474, 'BIC squared')];
+%     % Optimal nu-SVR model for BIC sqrt(k) ln N
+%     models = [models generate_SVR('nu',k_nusvr_MSE, 17.2521, 0.084368, 'BIC sqrt')];
+%     % Optimal nu-SVR model for BIC k ln k
+%     models = [models generate_SVR('nu',k_nusvr_MSE, 2.8014, 0.068737, 'BIC k lnk')];
+% 
+%     % Some arbitrary nu-SVR models 
+%     models = [models,generate_inrange_model('nu',0.5,1.5,1,10,0.02,0.15)];
+%     
+%     sparsity_vs_mse(Dataset, models,10,0.75,[1,2,3,4,5]);
+% end
 
 %% s5.GRID-SEARCH CROSS-VALIDATION FOR NU-SVR (rbf kernel)
 n_fold = 10;        % folds
 tt_ratio = 0.5;     % training-testing ratio
 % Defines grid search range : 
-nu      = linspace(0.001, 0.1, 20);
-C       = logspace(-1, 1.5, 20);
-sigma   = logspace(-2, 1, 20);
+nu      = linspace(0.001, 1, 5);
+C       = logspace(-1, 3, 5);
+sigma   = logspace(-2, 1, 5);
 grid_search_cv(Dataset, 'SVR', tt_ratio, n_fold, 'rbf', 'nu', nu, C, sigma); % performs grid search
 % Optimal params are :
 %       MSE: sigma = 1.1288, nu = 0.19737, C = 5.1348
