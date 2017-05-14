@@ -1,8 +1,8 @@
-function [mse, BIC, relevants] = cross_validate(ds, models, nb_folds, training_ratio, plotflag);
+function [mse, BIC, relevants] = cross_validate(ds, models, nb_folds, training_ratio, plotflag)
 % ============= HEADER ============= %
-% \brief   ? Performs cross validation and plots the result for all models
-% \param   ? ds <- dataset
-%          ? models  <- sequence of
+% \brief   - Performs cross validation and plots the result for all models
+% \param   - ds <- dataset
+%          - models  <- sequence of
 %                       model {
 %                           'name' <- name for the plot
 %                           'type' <- 'SVR' or 'RVR'
@@ -12,10 +12,10 @@ function [mse, BIC, relevants] = cross_validate(ds, models, nb_folds, training_r
 %                                   }
 %                           'params' <- depend on the type
 %                       }
-%          ? nb_folds  <- number of folds for CV
-%          ? training_ratio  <- ratio of training examples
+%          - nb_folds  <- number of folds for CV
+%          - training_ratio  <- ratio of training examples
 
-% \returns ? mse <- the mse matrix for each model on each fold
+% \returns - mse <- the mse matrix for each model on each fold
 %            BIC <- BIC metric
 % ============= HEADER ============= %
 
@@ -33,13 +33,12 @@ for j=1:nb_folds
                 label = svmpredict(test_fold.outputs,test_fold.inputs,model,'-q');
                 
             case 'RVR'
-                model = rvr(train_fold, models(i).kernel, models(i).params,false);
-                label = model.predict(test_fold.inputs)';
+                model = rvr(train_fold, models(i).kernel,false);
+                label = model.predict(test_fold.inputs);
                 
             otherwise
                 error('Unknown method');
-        end
-       
+        end       
         mse(j,i)  = mean((test_fold.outputs - label).^2);
         
         switch models(i).type

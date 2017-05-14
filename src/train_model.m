@@ -3,7 +3,7 @@ function model = train_model(ds,m, plot_flag)
        case 'SVR'
            model = svr(ds,m.kernel,m.params,plot_flag);
        case 'RVR'
-           model = rvr(ds,m.kernel,m.params,plot_flag);
+           model = rvr(ds,m.kernel,plot_flag);
        otherwise
            error('Unknown regression type')
    end
