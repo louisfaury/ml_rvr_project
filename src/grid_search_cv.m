@@ -23,7 +23,7 @@ for i=1:length(sigma)
    models = [models generate_RVR(kernel, 0.1, 0.1, strcat('RVR \sigma=', num2str(sigma(i))))];
 end
 
-[mse, BIC, trained_models] = cross_validate(Dataset, models, nfold, ttratio, 0);
+[mse, BIC, trained_models] = cross_validate(Dataset, models, nfold, ttratio, Dataset.variance, 0);
 
 display_grid_search_rvr(sigma, mse, BIC, nfold);
 
@@ -62,7 +62,7 @@ function grid_search_nusvr(Dataset, ttratio, nfold, kernelstr, nu, C, sigma)
                 name = strcat('$\nu$-SVR $\sigma$=', num2str(sigma(i)), '\nu=',  num2str(nu(j)), 'C =', num2str(C(k)));
                 models = [models generate_SVR('nu', kernel, C(k), nu(j), name)];
             end
-            [modelMSE, modelBIC, trained_models] = cross_validate(Dataset, models, nfold, ttratio, 0);
+            [modelMSE, modelBIC, trained_models] = cross_validate(Dataset, models, nfold, ttratio, Dataset.variance, 0);
             mse(i,j,:,:) = modelMSE';
             BIC(i,j,:,:) = modelBIC';
         end
@@ -86,7 +86,7 @@ function grid_search_csvr(Dataset, ttratio, nfold, kernelstr, epsilon, C, sigma)
                 name = strcat('$\C$-SVR $\sigma$=', num2str(sigma(i)), '\epsilon=',  num2str(epsilon(j)), 'C =', num2str(C(k)));
                 models = [models generate_SVR('C', kernel, C(k), epsilon(j), name)];
             end
-            [modelMSE, modelBIC, trained_models] = cross_validate(Dataset, models, nfold, ttratio, 0);
+            [modelMSE, modelBIC, trained_models] = cross_validate(Dataset, models, nfold, ttratio, Dataset.variance, 0);
             mse(i,j,:,:) = modelMSE';
             BIC(i,j,:,:) = modelBIC';
         end
@@ -200,6 +200,8 @@ function display_grid_search_nusvr(Dataset, kernelstr, nfold, nu, C, sigma, mse,
     shading interp
     clb = colorbar;
     title(clb, strcat(num2str(nfold), '-fold BIC'));
+    TickLabel = get(clb,'Ticks');
+    set(clb,'TickLabels',strtrim(cellstr(num2str(TickLabel'))'))
     xlabel('$\nu$');
     ylabel('C')
     title(strcat('Grid search for $\nu$-SVR on C and $\nu$ ($\sigma$ = ', num2str(bestSigma), ')'));
@@ -213,6 +215,8 @@ function display_grid_search_nusvr(Dataset, kernelstr, nfold, nu, C, sigma, mse,
     clb = colorbar;
     set(gca,'xscale','log', 'FontSize', 14)
     title(clb, strcat(num2str(nfold), '-fold BIC'));
+    TickLabel = get(clb,'Ticks');
+    set(clb,'TickLabels',strtrim(cellstr(num2str(TickLabel'))'))
     xlabel('$\sigma$');
     ylabel('$\nu$')
     title(strcat('Grid search for $\nu$-SVR on $\sigma$ and $\nu$ (C = ', num2str(bestC), ')'));
@@ -224,6 +228,8 @@ function display_grid_search_nusvr(Dataset, kernelstr, nfold, nu, C, sigma, mse,
     shading interp
     clb = colorbar;
     title(clb, strcat(num2str(nfold), '-fold BIC'));
+    TickLabel = get(clb,'Ticks');
+    set(clb,'TickLabels',strtrim(cellstr(num2str(TickLabel'))'))
     xlabel('$\sigma$');
     ylabel('$C$')
     set(gca,'yscale','log', 'xscale', 'log', 'FontSize', 14)
@@ -238,6 +244,8 @@ function display_grid_search_nusvr(Dataset, kernelstr, nfold, nu, C, sigma, mse,
     shading interp
     clb = colorbar;
     title(clb, strcat(num2str(nfold), '-fold BIC'));
+    TickLabel = get(clb,'Ticks');
+    set(clb,'TickLabels',strtrim(cellstr(num2str(TickLabel'))'))
     xlabel('$\nu$');
     ylabel('$\sigma$');
     zlabel('$C$');
@@ -283,7 +291,7 @@ function display_grid_search_csvr(Dataset, kernelstr, nfold, epsilon, C, sigma, 
     title(strcat('Grid search for $\epsilon$-SVR on C and $\epsilon$ ($\sigma$ = ', num2str(bestSigma), ')'));
     
    
-    % Plot grid search sigma against nu
+    % Plot grid search sigma against eps
     subplot(2,2,2)
     [epsPlot, sigmaPlot] = meshgrid(epsilon, sigma);
     pcolor(sigmaPlot, epsPlot, squeeze(meanMse(:,:,idx3)))
@@ -321,7 +329,7 @@ function display_grid_search_csvr(Dataset, kernelstr, nfold, epsilon, C, sigma, 
     set(gca,'yscale','log', 'xscale', 'log', 'zscale', 'log', 'FontSize', 14)
     title(strcat('Grid search for $\epsilon$-SVR'));
 
-%% Plot MSE
+%% Plot BIC
 
     meanBIC = mean(BIC, 4);
     [idx1, idx2, idx3] = ind2sub(size(meanBIC),find(meanBIC == min(meanBIC(:))));
@@ -338,7 +346,9 @@ function display_grid_search_csvr(Dataset, kernelstr, nfold, epsilon, C, sigma, 
     set(gca,'yscale','log', 'xscale', 'log', 'FontSize', 14)
     shading interp
     clb = colorbar;
-    title(clb, strcat(num2str(nfold), '-fold MSE'));
+    title(clb, strcat(num2str(nfold), '-fold BIC'));
+    TickLabel = get(clb,'Ticks');
+    set(clb,'TickLabels',strtrim(cellstr(num2str(TickLabel'))'))
     xlabel('$\epsilon$');
     ylabel('C')
     title(strcat('Grid search for $\epsilon$-SVR on C and $\epsilon$ ($\sigma$ = ', num2str(bestSigma), ')'));
@@ -352,6 +362,8 @@ function display_grid_search_csvr(Dataset, kernelstr, nfold, epsilon, C, sigma, 
     shading interp
     clb = colorbar;
     title(clb, strcat(num2str(nfold), '-fold BIC'));
+    TickLabel = get(clb,'Ticks');
+    set(clb,'TickLabels',strtrim(cellstr(num2str(TickLabel'))'))
     xlabel('$\sigma$');
     ylabel('$\epsilon$')
     title(strcat('Grid search for $\epsilon$-SVR on $\sigma$ and $\epsilon$ (C = ', num2str(bestC), ')'));
@@ -363,6 +375,8 @@ function display_grid_search_csvr(Dataset, kernelstr, nfold, epsilon, C, sigma, 
     shading interp
     clb = colorbar;
     title(clb, strcat(num2str(nfold), '-fold BIC'));
+    TickLabel = get(clb,'Ticks');
+    set(clb,'TickLabels',strtrim(cellstr(num2str(TickLabel'))'))
     xlabel('$\sigma$');
     ylabel('$C$')
     set(gca,'yscale','log', 'xscale', 'log', 'FontSize', 14)
@@ -375,6 +389,8 @@ function display_grid_search_csvr(Dataset, kernelstr, nfold, epsilon, C, sigma, 
     shading interp
     clb = colorbar;
     title(clb, strcat(num2str(nfold), '-fold BIC'));
+    TickLabel = get(clb,'Ticks');
+    set(clb,'TickLabels',strtrim(cellstr(num2str(TickLabel'))'))
     xlabel('$\epsilon$');
     ylabel('$\sigma$');
     zlabel('$C$');
