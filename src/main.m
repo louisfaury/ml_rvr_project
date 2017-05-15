@@ -17,11 +17,11 @@ addpath(genpath('../lib'))
 
 %% s1.LOAD DATASET
 % Loads 'sinc' dataset
-% name = 'sinc2';
-% plot_flag = 1;
+ name = 'sinc';
+ plot_flag = 1;
 % Loads 'airfoils' dataset
-name = 'airfoils';
-plot_flag = 0;
+%name = 'airfoils';
+%plot_flag = 0;
 
 load(strcat('dataset_',name,'.mat'));
 

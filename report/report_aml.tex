@@ -11,7 +11,7 @@
 \usepackage{hyperref}
 \usepackage[latin1]{inputenc}
 \usepackage{lipsum}
-\usepackage{coolMath}
+\usepackage{coolmath}
 \usepackage[hang,small]{caption}
 \graphicspath{{Images/}}
 
@@ -19,7 +19,7 @@
 \author{
 	\IEEEauthorblockN{Hadrien Hendrikx}
 	\IEEEauthorblockA{
-					School of Engineering (STI)\\
+					School of Computer and Communication Sciences (IC)\\
 					\'Ecole Polytechnique \\ Fédérale de Lausanne\\
 					Lausanne, Switzerland\\
 					hadrien.hendrix@epfl.ch
@@ -290,6 +290,8 @@
 			\subsubsection{Grid-search cross-validation}
 			{
 				In the following, we performed 50-fold cross-validation with a 0.75 training-test ratio, using the $BICSR$ previously defined.
+				
+				In order to find the best parameters, we started with a very wide range of values (between 10^{-3} and 10^3 for every}) and a coarse granularity (10 points for every parameter) to locate the interesting regions. This allowed us to guess more precisely where the optimal region was. Then, we ran a second grid-search with 20 points for each dimensions around the best point for the previous one. We chose a range that roughly correspond to the interval between 2 neighboring points in the previous grid search. 
 				\begin{figure}
 					\begin{center}
 						\includegraphics[width=0.85\linewidth]{gridsearch_epsSVR}
@@ -306,7 +308,9 @@
 					\end{center}
 				\end{figure}
 			
-			Figures (\ref{fig::gridSearch_epsSVR_sinc}) and (\ref{fig::gridSearch_nuSVR_sinc}) display grid search results for both $\epsilon$-SVR and $\nu$-SVR in the form of heat-maps. As expected both selected models are almost the same therefore showing the equivalence between both approaches. Both lead to a total of 14 support vectors.
+			Figures (\ref{fig::gridSearch_epsSVR_sinc}) and (\ref{fig::gridSearch_nuSVR_sinc}) display grid search results for both $\epsilon$-SVR and $\nu$-SVR in the form of heat-maps. If we fix $C$, there is a small region of low values for our objective function that then increases as we move further away. Changing the value of $C$ only changes the size of the region and its value but not the global behaviour, which suggests that this parameter has little influence on the result as long as values are not too far from the optimal. This leads us to believe that there is a global minimum for our objective function, that this minimum is captured by our grid and therefore that the result of our grid search is reliable. The form of the regions is different between $\epsilon$-SVR and $\nu$-SVR but comments are the same. 
+			
+			 As expected both selected models are almost the same therefore showing the equivalence between both approaches. Both lead to a total of 14 support vectors.
 			
 				\begin{figure}
 					\begin{center}
@@ -317,10 +321,12 @@
 				\end{figure}
 			Figure (\ref{fig::gridSearch_RVR_sinc}) displays grid-search results for the RVR over kernel width $\sigma$, the only hyperparameter for this method. 
 			
+			Since RVR only requires to set $1$ parameter, the grid search is even easier and the optimal parameter is located at what appears to be a global minimum for the objective function as shown in figure~\ref{fig::gridSearch_RVR_sinc}.
+			
 			\begin{figure}
 				\begin{center}
 					\includegraphics[width=0.75\linewidth]{ROC_sinc}
-					\caption{Evaluation of the tradeoff between raw performance ($MSE$) and sparsity (number of non-zero coefficients). Points correspond to the best hyperparameters for each method and each metric.}
+					\caption{Evaluation of the tradeoff between raw performance ($MSE$) and for each method and each metric.}
 					\label{fig::ROC_sinc}
 				\end{center}
 			\end{figure}
