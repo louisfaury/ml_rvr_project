@@ -42,7 +42,7 @@ load(strcat('dataset_',name,'.mat'));
 %% s3.RELEVANCE VECTOR REGRESSION -- uncomment for a test run (train+predict)
 % Defines base functions and its hyperparameters
 % kernelstr = 'rbf';                             % 'rbf', 'polynomial', 'linear'
-% width = 1.35;
+% width = 0.56;
 % kernel = generate_kernel(kernelstr, width);
 % alpha = 0.1;                                    % initial alpha
 % beta = 0.1;                                     % initial beta 
@@ -52,29 +52,29 @@ load(strcat('dataset_',name,'.mat'));
 
 
 %% s4.BIC METRIC TESTING 
-% % Shows the tradeoff found by our BIC measure on the artificial dataset,
-% % on a nu-SVR example 
-% models = [];
-% k_nusvr_BIC = generate_kernel('rbf',1.1288);
-% k_nusvr_MSE = generate_kernel('rbf',1.1288);
-% 
-% if (strcmp('sinc',name))
-%     % Optimal nu-SVR model for BIC
-%     models = [models generate_SVR('nu',k_nusvr_BIC, 3.7927, 0.032263, 'BIC $\star$')];
-%     % Optimal nu-SVR model for MSE
-%     models = [models generate_SVR('nu',k_nusvr_MSE, 5.1348, 0.19737, 'MSE $\star$')];
-%     % Optimal nu-SVR model for BIC k^2 ln N
-%     models = [models generate_SVR('nu',k_nusvr_MSE, 1.5283, 0.037474, 'BIC squared')];
-%     % Optimal nu-SVR model for BIC sqrt(k) ln N
-%     models = [models generate_SVR('nu',k_nusvr_MSE, 17.2521, 0.084368, 'BIC sqrt')];
-%     % Optimal nu-SVR model for BIC k ln k
-%     models = [models generate_SVR('nu',k_nusvr_MSE, 2.8014, 0.068737, 'BIC k lnk')];
-% 
-%     % Some arbitrary nu-SVR models 
-%     models = [models,generate_inrange_model('nu',0.5,1.5,1,10,0.02,0.15)];
-%     
-%     sparsity_vs_mse(Dataset, models,10,0.75,[1,2,3,4,5]);
-% end
+% Shows the tradeoff found by our BIC measure on the artificial dataset,
+% on a nu-SVR example 
+models = [];
+k_nusvr_BIC = generate_kernel('rbf',1.1288);
+k_nusvr_MSE = generate_kernel('rbf',1.1288);
+
+if (strcmp('sinc',name))
+    % Optimal nu-SVR model for BIC
+    models = [models generate_SVR('nu',k_nusvr_BIC, 3.7927, 0.032263, '$kln(N)$')];
+    % Optimal nu-SVR model for MSE
+     models = [models generate_SVR('nu',k_nusvr_MSE, 5.1348, 0.19737, 'MSE')];
+    % Optimal nu-SVR model for BIC k^2 ln N
+     models = [models generate_SVR('nu',k_nusvr_MSE, 1.5283, 0.037474, '$k^2ln(N)$')];
+    % Optimal nu-SVR model for BIC sqrt(k) ln N
+     models = [models generate_SVR('nu',k_nusvr_MSE, 17.2521, 0.084368, '$\sqrt{k}ln(N)$')];
+    % Optimal nu-SVR model for BIC k ln k
+     models = [models generate_SVR('nu',k_nusvr_MSE, 2.8014, 0.068737, '$kln(k)$')];
+
+    % Some arbitrary nu-SVR models 
+    models = [models,generate_inrange_model('nu',0.5,1.5,1,10,0.02,0.15)];
+    
+    sparsity_vs_mse(Dataset, models,20,0.75,[1,2,3,4,5]);
+end
 
 %% s5.GRID-SEARCH CROSS-VALIDATION FOR NU-SVR (rbf kernel)
 n_fold = 10;        % folds
