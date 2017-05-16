@@ -345,7 +345,7 @@
 				\begin{figure}
 					\begin{center}
 						\includegraphics[width=0.85\linewidth]{gridSearch_epsSVR_BIC_airfoils}
-						\caption{Grid search for $\epsilon$-SVR over $\epsilon$, $C$ and $\sigma$ for airfoils dataset \\ Best hyperparameters: $\epsilon = 0.46$, $C = 100$, $\sigma = 2.15$}
+						\caption{Grid search for $\epsilon$-SVR over $\epsilon$, $C$ and $\sigma$ for airfoils dataset \\ Best hyperparameters: $\epsilon = 0.46$, $C = 146.8$, $\sigma = 2.15$}
 						\label{fig::gridSearch_BIC_epsSVR_airfoils}
 					\end{center}
 				\end{figure}
@@ -360,7 +360,7 @@
 					\end{center}
 				\end{figure}
 				
-				\noindent Figures (\ref{fig::gridSearch_BIC_epsSVR_airfoils}) and (\ref{fig::gridSearch_BIC_nuSVR_airfoils}) expose obtained results for both $nu$-SVR and $\epsilon$-SVR. General behavior of the algorithms to the different hyperparameters variations seemed consistent with observations made on the artificial sinc dataset.  Again, distinct wells could be observed when displaying the objective function evolution leading to the conclusion that  found optimums are global. For $\epsilon$-SVR, the optimal hyperparameters values lead to a Mean Square Error of 0.185 for 295 support vectors while $\nu$-SVR yields 249 support vectors for a MSE of 0.20.
+				\noindent Figures (\ref{fig::gridSearch_BIC_epsSVR_airfoils}) and (\ref{fig::gridSearch_BIC_nuSVR_airfoils}) expose obtained results for both $nu$-SVR and $\epsilon$-SVR. General behavior of the algorithms to the different hyperparameters variations seemed consistent with observations made on the artificial sinc dataset.  Again, distinct wells could be observed when displaying the objective function evolution leading to the conclusion that  found optimums are global. For $\epsilon$-SVR, the optimal hyperparameters values lead to a Mean Square Error of 0.16 for 295 support vectors while $\nu$-SVR yields 249 support vectors for a MSE of 0.18.
 				
 				  \begin{figure}
 					\begin{center}
@@ -371,7 +371,7 @@
 				\end{figure}
 				
 
-				\noindent Results of grid search over $\sigma$, the kernel width for Relevance Vectors Regression are displayed on figure (\ref{fig::airfoils_gridsearch_RVR_BIC}). Optimal kernel width therefore corresponds to $\sigma = 1.78$ leading to an MSE of 0.20. Number of retrieved relevance vectors is 66. Again, for this real dataset,  the RVR optimum leads to equivalent generalization performance but with a lot more sparsity.
+				\noindent Results of grid search over $\sigma$, the kernel width for Relevance Vectors Regression are displayed on figure (\ref{fig::airfoils_gridsearch_RVR_BIC}). Optimal kernel width therefore corresponds to $\sigma = 1.78$ leading to an MSE of 0.17. Number of retrieved relevance vectors is 66. Again, for this real dataset,  the RVR optimum leads to relatively equivalent generalization performance but with a lot more sparsity.
 				
 
 				
@@ -425,7 +425,7 @@
 			}
 			\subsubsection{Model comparaison}
 			{
-				Now that we have more insights into how our metrics behave, it is possible to compare the different models that maximize it. 
+				Now that we have more insights into how our metrics behaves, it is possible to compare the different models that maximize it. 
 				
 				\begin{figure}
 					\begin{center}
@@ -435,7 +435,7 @@
 					\end{center}
 				\end{figure}
 				
-				Figure~\ref{fig::ROC_sinc} allows us to see how the different methods react to the trade-off sparsity versus performance (which is measured by MSE minimization).
+				Figure~(\ref{fig::ROC_sinc}) allows us to see how the different methods react to the trade-off sparsity versus performance (which is measured by MSE minimization).
 				
 				First of all, we see that except from the $\varepsilon$-SVR maximizing the BICSR, all MSE values are comparable (around $15\%$ difference). However, there is a big gap in terms of sparsity since SVR with the MSE metrics have about twice as much support vectors as SVR that minimizes the BICSR metric.
 				
@@ -449,8 +449,7 @@
 					\end{center}
 				\end{figure}
 			
-				The sinc dataset was a bit too easy for our methods, which is why MSE values were close. Figure \ref{fig::ROC_airfoils} shows the same curve as before but for the airfoils dataset. We can observe now that the difference in terms of MSE is significant (up to $70\%$). The difference in sparsity is also huge since $SVR$ solutions minimizing the MSE have 10 times more support vectors than RVR solutions (50\% of the dataset versus 5\%). We see that $\nu$-SVR and $\varepsilon$-SVR perform relatively similarly (although there is a little difference for the BICSR metric), and that they are very sensitive to the change of metric. On the other hand, RVR solutions are close to solutions for SVR using the BICSR metric. Again, RVR is not very sensitive to the metric used although there is now a difference between the two.
-				
+				The sinc dataset was a bit too easy for our methods, which is why MSE values were close. Figure (\ref{fig::ROC_airfoils}) shows the same curve as before but for the airfoils dataset. We can observe now that the difference in terms of MSE is significant (up to $70\%$). The difference in sparsity is also huge since SVR solutions minimizing the MSE have 10 times more support vectors than RVR solutions (50\% of the dataset versus 5\%). We see that $\nu$-SVR and $\varepsilon$-SVR perform relatively similarly (although there is a little difference for the BICSR metric), and that they are very sensitive to the change of metric. On the other hand, RVR solutions are close to solutions for SVR using the BICSR metric. Again, RVR is not very sensitive to the metric used although there is now a difference between the two.
 				\newline To summarize, RVR should be prefered when sparsity is a key feature because it always leads to sparser solutions than SVR (with better MSE for comparable levels of sparsity) and is less sensitive to the choice of the metric. On the other hand, this insensivity may be a problem since it only leads to very sparse solutions. To find the best MSE while staying under a relatively high given threshold of support vectors (0.3 for example) then it is possible to tweak a metric (BICSR with sublinear penalization on the number of support vectors for example) and then to use SVR, whereas RVR would almost always give the same result.
 				
 				Not that here we use the same set for cross-validation and testing. This may lead the hyper-parameters to overfit the cross-validation set, therefore leading to lower scores than one would expect at generalization. However, this is not critical for our study since we are more interested in the impact of the metrics and not the true generalization of our methods.
