@@ -48,7 +48,8 @@ for j=1:nb_folds
                 BIC(j,i) = 1/variance*ds.numPoints*mse(j,i) + nRelevant*log(ds.numPoints);
             case 'RVR'
                 nRelevant = length(model.Parameter.Relevant);
-                BIC(j,i) = 1/variance*ds.numPoints*mse(j,i) + nRelevant*log(ds.numPoints);
+                 BIC(j,i) = 1/variance*ds.numPoints*mse(j,i) + nRelevant*log(ds.numPoints);
+                 %BIC(j,i) = model.Hyperparameter.beta;
             otherwise
                 error('Unknown method')
         end
