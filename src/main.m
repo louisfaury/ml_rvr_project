@@ -17,11 +17,11 @@ addpath(genpath('../lib'))
 
 %% s1.LOAD DATASET
 % Loads 'sinc' dataset
- name = 'sinc';
- plot_flag = 1;
+% name = 'sinc';
+% plot_flag = 1;
 % Loads 'airfoils' dataset
-%name = 'airfoils';
-%plot_flag = 0;
+name = 'airfoils';
+plot_flag = 0;
 
 load(strcat('dataset_',name,'.mat'));
 
@@ -154,16 +154,18 @@ k_nusvr_BIC = generate_kernel('rbf',2.154);
 k_nusvr_MSE = generate_kernel('rbf',1);
 models = [];
 % Optimal RVR model for BIC
-models = [models generate_RVR(k_rvr_BIC,100,0.3, 'RVR MSE/BIC')];
+models = [models generate_RVR(k_rvr_BIC,100,0.3, 'RVR')];
+% Optimal RVR model for MSE
+models = [models generate_RVR(k_rvr_MSE,100,0.3, 'RVR')];
 % Optimal nu SVR model for BIC
-models = [models generate_SVR('nu',k_nusvr_BIC, 46.4, 0.112, '$\nu$-SVR BIC')];
+models = [models generate_SVR('nu',k_nusvr_BIC, 46.4, 0.112, '$\nu$-SVR')];
 %Optimal nu SVR model for MSE
-models = [models generate_SVR('nu',k_nusvr_MSE, 21.54, 0.445, '$\nu$-SVR MSE')];
+models = [models generate_SVR('nu',k_nusvr_MSE, 21.54, 0.445, '$\nu$-SVR')];
 %Optimal C SVR for BIC
-models = [models generate_SVR('C',k_csvr_BIC, 100, 0.46, '$\varepsilon$-SVR BIC')];
+models = [models generate_SVR('C',k_csvr_BIC, 100, 0.46, '$\varepsilon$-SVR')];
 %Optimal C SVR for MSE
-models = [models generate_SVR('C',k_csvr_MSE, 21.54, 0.1, '$\varepsilon$-SVR MSE')];
+models = [models generate_SVR('C',k_csvr_MSE, 21.54, 0.1, '$\varepsilon$-SVR')];
 % Generates plots : 
 tt_ratio = 0.75;
 n_fold   = 50;
-sparsity_vs_mse(Dataset, models,50,0.75); % 50-fold with 0.75 training test ratio
+sparsity_vs_mse_nr(Dataset, models,20,0.75, [1,0,1,0,1,0]); % 50-fold with 0.75 training test ratio

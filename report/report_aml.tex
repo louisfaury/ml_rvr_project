@@ -330,14 +330,6 @@
 				\end{figure}
 			\noindent Figure (\ref{fig::gridSearch_RVR_sinc}) displays grid-search results for the RVR over kernel width $\sigma$, the only hyperparameter for this method. Found optimal value $1.28$ again confirms expectations that the order of magnitude is well chosen since it is close to the value chosen for $SVR$ methods.
 			
-			\begin{figure}
-				\begin{center}
-					\includegraphics[width=0.75\linewidth]{ROC_sinc}
-					\caption{Evaluation of the tradeoff between raw performance ($MSE$) and for each method and each metric.}
-					\label{fig::ROC_sinc}
-				\end{center}
-			\end{figure}
-			
 			% TODO : some more commenting over the different figures (presence of a well and plateau, .. )
 			% TODO : motivate bounds
 			% TODO : use the following rather in the discussion part 
@@ -418,7 +410,33 @@
 			}
 			\subsubsection{Model comparaison}
 			{
+				Now that we have more insights into how our metrics behave, it is possible to compare the different models that maximize it. 
 				
+				\begin{figure}
+					\begin{center}
+						\includegraphics[width=0.75\linewidth]{ROC_sinc}
+						\caption{Evaluation of the tradeoff between raw performance ($MSE$) and for each method and each metric for the sinc dataset.}
+						\label{fig::ROC_sinc}
+					\end{center}
+				\end{figure}
+				
+				Figure~\ref{fig::ROC_sinc} allows us to see how the different methods react to the trade-off sparsity versus performance (which is measured by MSE minimization).
+				
+				First of all, we see that except from the $\varepsilon$-SVR maximizing the BICSR, all MSE values are comparable (around $15\%$ difference). However, there is a big gap in terms of sparsity \textbf{[develop this part]}.
+				
+				The key insights from this figure is that SVR methods with MSE objective have many support vectors, and that the BICSR metric leads to sparser solutions with minimal increase of the MSE. RVR achieves the best sparsity by far with minimal MSE increase and there is almost no difference between the models selected by the two different metrics.
+				
+				\begin{figure}
+					\begin{center}
+						\includegraphics[width=0.75\linewidth]{airfoils_sparsity_MSE}
+						\caption{Evaluation of the tradeoff between raw performance ($MSE$) and for each method and each metric for the airfoils dataset.}
+						\label{fig::ROC_airfoils}
+					\end{center}
+				\end{figure}
+			
+				The sinc dataset was a bit too easy for our methods, which is why MSE values were close. Figure \ref{fig::ROC_airfoils} shows the same curve as before but for the airfoils dataset. We can observe now that the difference in terms of MSE is significant (up to $70\%$). The difference in sparsity is also huge since $SVR$ solutions minimizing the MSE have 10 times more support vectors than RVR solutions (50\% of the dataset versus 5\%). We see that $\nu$-SVR and $\varepsilon$-SVR perform relatively similarly (although there is a little difference for the BICSR metric), and that they are very sensitive to the change of metric. On the other hand, RVR solutions are close to solutions for SVR using the BICSR metric. Again, RVR is not very sensitive to the metric used although there is now a difference between the two.
+				
+				\newline To summarize, RVR should be prefered when sparsity is a key feature because it always leads to sparser solutions than SVR (with better MSE for comparable levels of sparsity) and is less sensitive to the choice of the metric. On the other hand, this insensivity may be a problem since it only leads to very sparse solutions. To find the best MSE while staying under a relatively high given threshold of support vectors (0.3 for example) then it is possible to tweak a metric (BICSR with sublinear penalization on the number of support vectors for example) and then to use SVR, whereas RVR would almost always give the same result.
 			}
 		}
 		\subsection{Behavior far from data}
