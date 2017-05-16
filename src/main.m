@@ -17,11 +17,11 @@ addpath(genpath('../lib'))
 
 %% s1.LOAD DATASET
 % Loads 'sinc' dataset
- name = 'sinc';
- plot_flag = 1;
+%  name = 'sinc';
+%  plot_flag = 1;
 % Loads 'airfoils' dataset
-%name = 'airfoils';
-%plot_flag = 0;
+name = 'airfoils';
+plot_flag = 0;
 
 load(strcat('dataset_',name,'.mat'));
 
@@ -31,24 +31,24 @@ load(strcat('dataset_',name,'.mat'));
 % kernel = generate_kernel(kernelstr, 1.1288);
 % % Defines svr type
 % type = 'nu';                                    % 'C', 'nu'
-% C = 5;
-% param = 0.19;                                   % param = epsilon or nu depending on the type
+% C = 1.13;
+% param = 0.057;                                   % param = epsilon or nu depending on the type
 % % Calls SVR
 % 
 % model = generate_SVR(type, kernel, C, param, 'SVR');
 % model = train_model(Dataset,model,plot_flag);
-
+% 
 
 %% s3.RELEVANCE VECTOR REGRESSION -- uncomment for a test run (train+predict)
 % Defines base functions and its hyperparameters
-% kernelstr = 'rbf';                             % 'rbf', 'polynomial', 'linear'
-% width = 0.56;
-% kernel = generate_kernel(kernelstr, width);
-% alpha = 0.1;                                    % initial alpha
-% beta = 0.1;                                     % initial beta 
-% model = generate_RVR(kernel,alpha,beta,'RVR');
-% % call RVR
-% model = train_model(Dataset,model,plot_flag);
+kernelstr = 'rbf';                             % 'rbf', 'polynomial', 'linear'
+width = 1.78;
+kernel = generate_kernel(kernelstr, width);
+alpha = 0.1;                                    % initial alpha
+beta = 0.1;                                     % initial beta 
+model = generate_RVR(kernel,alpha,beta,'RVR');
+% call RVR
+model = train_model(Dataset,model,plot_flag);
 
 
 %% s4.BIC METRIC TESTING 
@@ -98,10 +98,10 @@ tt_ratio = 0.5;     % training-testing ratio
 n_fold = 10;        % folds
 tt_ratio = 0.5;     % training-testing ratio 
 %Defines grid search range :
-eps     = logspace(-2, 1, 10);
-C       = logspace(-1, 2, 10);
-sigma   = logspace(-2, 1, 10);
-grid_search_cv(Dataset, 'SVR', tt_ratio, n_fold, 'rbf', 'C', eps, C, sigma); % performs grid search
+% eps     = logspace(-2, 1, 10);
+% C       = logspace(-1, 2, 10);
+% sigma   = logspace(-2, 1, 10);
+% grid_search_cv(Dataset, 'SVR', tt_ratio, n_fold, 'rbf', 'C', eps, C, sigma); % performs grid search
 % Optimal params for (sinc dataset):
 %       MSE: sigma = 0.92367, eps = 0.085317, C = 0.88772
 %       BIC: sigma = 1.1721, eps = 0.17433, C = 2.9209
@@ -110,8 +110,8 @@ grid_search_cv(Dataset, 'SVR', tt_ratio, n_fold, 'rbf', 'C', eps, C, sigma); % p
 % %       BIC: sigma = 2.154, eps = 0.46, C = 100
 
 %% s7.GRID-SEARCH CROSS-VALIDATION FOR RVR (rbf kernel)
-tt_ratio = 0.5;  % trainig_testing ratio 
-n_fold   = 10;   % fold 
+tt_ratio = 0.75;  % trainig_testing ratio 
+n_fold   = 50;   % fold 
 % Defines range of hyperparameters
 sigma  = logspace(-1.5, 1, 20);
 grid_search_cv(Dataset, 'RVR', tt_ratio, n_fold, 'rbf', sigma);
