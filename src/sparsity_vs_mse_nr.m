@@ -31,8 +31,8 @@ end
 % Text displacement (readability)
 dx = - 0.01 * ones(size(nRelevant)); 
 dy = - 0.0025 * ones(size(nRelevant));
-dy(length(nRelevant)) = 0.0025
-dx(length(nRelevant)) = - 0.04
+dy(length(nRelevant)) = 0.0025;
+dx(length(nRelevant)) = - 0.04;
 figure;
 hold on;
 grid minor;
