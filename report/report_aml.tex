@@ -19,7 +19,7 @@
 \author{
 	\IEEEauthorblockN{Hadrien Hendrikx}
 	\IEEEauthorblockA{
-					School of Computer and Communication Sciences (IC)\\
+					School of Computer and \\ Communication Sciences (IC)\\
 					\'Ecole Polytechnique \\ Fédérale de Lausanne\\
 					Lausanne, Switzerland\\
 					hadrien.hendrix@epfl.ch
@@ -413,7 +413,7 @@
 						\label{fig::bicsr_valid}
 					\end{center}
 				\end{figure}
-				\newline As previously introduced, the BICSR metric measures the tradeoff between MSE and sparsity. It linearly penalizes the number of support vectors, proportionally to $ln N$. We wondered if some other (utlimately better, depending on the end goal) tradeoff could be found by changing the nature of this penalization. For instance, we could think of a non-linear penalization of the numbers of support vectors (a quadratic penalization would lead to sparser models, and a logarithmic one to more accurate ones). Figure (\ref{fig::bicsr_penal}) displays the MSE versus sparsity models found when varying the nature of the penalization. Hence, it seems that our initial metric (designated as BISCR) naturally finds a rather interesting tradeoff for generalization against sparsity.  We will therefore use it as our baseline metric for the different model comparaisons. 
+				\newline As previously introduced, the BICSR metric measures the tradeoff between MSE and sparsity. It linearly penalizes the number of support vectors, proportionally to $ln N$. We wondered if some other (ultimately better, depending on the end goal) tradeoff could be found by changing the nature of this penalization. For instance, we could think of a non-linear penalization of the numbers of support vectors (a quadratic penalization would lead to sparser models, and a logarithmic one to more accurate ones). Figure (\ref{fig::bicsr_penal}) displays the MSE versus sparsity models found when varying the nature of the penalization. Hence, it seems that our initial metric (designated as BISCR) naturally finds a rather interesting tradeoff for generalization against sparsity.  We will therefore use it as our baseline metric for the different model comparaisons. 
 				\begin{figure}[h!]
 					\begin{center}
 						\includegraphics[width=0.85\linewidth]{bic_penal_eval}
@@ -425,25 +425,25 @@
 			}
 			\subsubsection{Model comparaison}
 			{
-				Now that we have more insights into how our metrics behaves, it is possible to compare the different models that maximize it. 
+				Now that we have more insights into how our metrics behaves, it is possible to compare the different models that minimize it. 
 				
 				\begin{figure}
 					\begin{center}
-						\includegraphics[width=0.75\linewidth]{ROC_sinc}
+						\includegraphics[width=0.85\linewidth]{ROC_sinc}
 						\caption{Evaluation of the tradeoff between raw performance ($MSE$) and for each method and each metric for the sinc dataset.}
 						\label{fig::ROC_sinc}
 					\end{center}
 				\end{figure}
 				
-				Figure~(\ref{fig::ROC_sinc}) allows us to see how the different methods react to the trade-off sparsity versus performance (which is measured by MSE minimization).
+				Figure~(\ref{fig::ROC_sinc}) allows us to see how the different methods react to the trade-off sparsity versus performance.
 				
-				First of all, we see that except from the $\varepsilon$-SVR maximizing the BICSR, all MSE values are comparable (around $15\%$ difference). However, there is a big gap in terms of sparsity since SVR with the MSE metrics have about twice as much support vectors as SVR that minimizes the BICSR metric.
+				First of all, we see that except from the $\varepsilon$-SVR model which minimizes the BICSR, all model lead to comparable MSE are comparable (around $15\%$ difference). However, there is a big gap in terms of sparsity since SVR with the MSE metrics have about twice as much support vectors as SVR that minimizes the BICSR metric.
 				
 				The key insights from this figure are that SVR methods with MSE objective have many support vectors, and that the BICSR metric leads to sparser solutions with minimal increase of the MSE. RVR achieves the best sparsity by far with minimal MSE increase and there is almost no difference between the models selected by the two different metrics.
 				
 				\begin{figure}
 					\begin{center}
-						\includegraphics[width=0.75\linewidth]{airfoils_sparsity_MSE}
+						\includegraphics[width=0.85\linewidth]{airfoils_sparsity_MSE}
 						\caption{Evaluation of the tradeoff between raw performance ($MSE$) and for each method and each metric for the airfoils dataset.}
 						\label{fig::ROC_airfoils}
 					\end{center}
@@ -466,13 +466,6 @@
 	{
 
 	}
-	
-	% \newline RVR lies in the family of bayesian methods for regression, it is therefore possible to derive a likelihood expression as in equation (\ref{eq::rvr_likelihood}). In this case, the log-likelihood of the model therefore writes:. Even though no likelihood expression can be derived for SVR, analogies between both methods lead to use previous equation to design the sparse regression evaluative metric in case of SVR.  
-
-			\begin{equation}
-			ln(L(\mathbf{t}{,X,w,\beta})) =  -\frac{1}{2}\beta^2 \sum_{i=1}{N}(t_n - y(x_n))^2
-			\end{equation}
-			where we recall that estimated parameter $\beta$ is supposed to represent the precision (inverse of the variance) of the noise affecting the output. Therefore, a
 	
 	\bibliographystyle{plain}
  	 \bibliography{bib_file}
