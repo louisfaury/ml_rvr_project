@@ -41,40 +41,40 @@ load(strcat('dataset_',name,'.mat'));
 
 %% s3.RELEVANCE VECTOR REGRESSION -- uncomment for a test run (train+predict)
 % Defines base functions and its hyperparameters
-kernelstr = 'rbf';                             % 'rbf', 'polynomial', 'linear'
-width = 1.78;
-kernel = generate_kernel(kernelstr, width);
-alpha = 0.1;                                    % initial alpha
-beta = 0.1;                                     % initial beta 
-model = generate_RVR(kernel,alpha,beta,'RVR');
-% call RVR
-model = train_model(Dataset,model,plot_flag);
+% kernelstr = 'rbf';                             % 'rbf', 'polynomial', 'linear'
+% width = 1.78;
+% kernel = generate_kernel(kernelstr, width);
+% alpha = 0.1;                                    % initial alpha
+% beta = 0.1;                                     % initial beta 
+% model = generate_RVR(kernel,alpha,beta,'RVR');
+% % call RVR
+% model = train_model(Dataset,model,plot_flag);
 
 
 %% s4.BIC METRIC TESTING 
 % Shows the tradeoff found by our BIC measure on the artificial dataset,
 % on a nu-SVR example 
-models = [];
-k_nusvr_BIC = generate_kernel('rbf',1.1288);
-k_nusvr_MSE = generate_kernel('rbf',1.1288);
-
-if (strcmp('sinc',name))
-    % Optimal nu-SVR model for BIC
-    models = [models generate_SVR('nu',k_nusvr_BIC, 3.7927, 0.032263, '$kln(N)$')];
-    % Optimal nu-SVR model for MSE
-     models = [models generate_SVR('nu',k_nusvr_MSE, 5.1348, 0.19737, 'MSE')];
-    % Optimal nu-SVR model for BIC k^2 ln N
-     models = [models generate_SVR('nu',k_nusvr_MSE, 1.5283, 0.037474, '$k^2ln(N)$')];
-    % Optimal nu-SVR model for BIC sqrt(k) ln N
-     models = [models generate_SVR('nu',k_nusvr_MSE, 17.2521, 0.084368, '$\sqrt{k}ln(N)$')];
-    % Optimal nu-SVR model for BIC k ln k
-     models = [models generate_SVR('nu',k_nusvr_MSE, 2.8014, 0.068737, '$kln(k)$')];
-
-    % Some arbitrary nu-SVR models 
-    models = [models,generate_inrange_model('nu',0.5,1.5,1,10,0.02,0.15)];
-    
-    sparsity_vs_mse(Dataset, models,20,0.75,[1,2,3,4,5]);
-end
+% models = [];
+% k_nusvr_BIC = generate_kernel('rbf',1.1288);
+% k_nusvr_MSE = generate_kernel('rbf',1.1288);
+% 
+% if (strcmp('sinc',name))
+%     % Optimal nu-SVR model for BIC
+%     models = [models generate_SVR('nu',k_nusvr_BIC, 3.7927, 0.032263, '$kln(N)$')];
+%     % Optimal nu-SVR model for MSE
+%      models = [models generate_SVR('nu',k_nusvr_MSE, 5.1348, 0.19737, 'MSE')];
+%     % Optimal nu-SVR model for BIC k^2 ln N
+%      models = [models generate_SVR('nu',k_nusvr_MSE, 1.5283, 0.037474, '$k^2ln(N)$')];
+%     % Optimal nu-SVR model for BIC sqrt(k) ln N
+%      models = [models generate_SVR('nu',k_nusvr_MSE, 17.2521, 0.084368, '$\sqrt{k}ln(N)$')];
+%     % Optimal nu-SVR model for BIC k ln k
+%      models = [models generate_SVR('nu',k_nusvr_MSE, 2.8014, 0.068737, '$kln(k)$')];
+% 
+%     % Some arbitrary nu-SVR models 
+%     models = [models,generate_inrange_model('nu',0.5,1.5,1,10,0.02,0.15)];
+%     
+%     sparsity_vs_mse(Dataset, models,20,0.75,[1,2,3,4,5]);
+% end
 
 %% s5.GRID-SEARCH CROSS-VALIDATION FOR NU-SVR (rbf kernel)
 n_fold = 10;        % folds
@@ -97,17 +97,17 @@ tt_ratio = 0.5;     % training-testing ratio
 %% s6.GRID-SEARCH CROSS-VALIDATION FOR eps-SVR (rbf kernel)
 n_fold = 10;        % folds
 tt_ratio = 0.5;     % training-testing ratio 
-%Defines grid search range :
-% eps     = logspace(-2, 1, 10);
-% C       = logspace(-1, 2, 10);
-% sigma   = logspace(-2, 1, 10);
-% grid_search_cv(Dataset, 'SVR', tt_ratio, n_fold, 'rbf', 'C', eps, C, sigma); % performs grid search
+% Defines grid search range :
+eps     = logspace(-2, 1, 10);
+C       = logspace(-1, 2, 20);
+sigma   = logspace(-2, 1, 10);
+grid_search_cv(Dataset, 'SVR', tt_ratio, n_fold, 'rbf', 'C', eps, C, sigma); % performs grid search
 % Optimal params for (sinc dataset):
 %       MSE: sigma = 0.92367, eps = 0.085317, C = 0.88772
 %       BIC: sigma = 1.1721, eps = 0.17433, C = 2.9209
-% % Optimal params are (for airfoils dataset):
-% %       MSE: sigma = 1, eps = 0.1, C = 21.54
-% %       BIC: sigma = 2.154, eps = 0.46, C = 100
+% Optimal params are (for airfoils dataset):
+%       MSE: sigma = 1, eps = 0.1, C = 21.54
+%       BIC: sigma = 2.154, eps = 0.46, C = 100
 
 %% s7.GRID-SEARCH CROSS-VALIDATION FOR RVR (rbf kernel)
 tt_ratio = 0.75;  % trainig_testing ratio 
