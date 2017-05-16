@@ -122,7 +122,7 @@ grid_search_cv(Dataset, 'RVR', tt_ratio, n_fold, 'rbf', sigma);
 %       MSE: sigma = 1.35
 %       BIC: sigma = 1.78
 
-%% s8.PLOT 'ROC' CRUVES : SPARSITY VS MSE
+%% s8.PLOT 'ROC' CRUVES : SPARSITY VS MSE, SINC DATASET
 % k_rvr_BIC   = generate_kernel('rbf',1.28);
 % k_rvr_MSE   = generate_kernel('rbf',0.56);
 % k_csvr_BIC  = generate_kernel('rbf',1.1721);
@@ -144,3 +144,26 @@ grid_search_cv(Dataset, 'RVR', tt_ratio, n_fold, 'rbf', sigma);
 % tt_ratio = 0.75;
 % n_fold   = 50;
 % sparsity_vs_mse(Dataset, models,50,0.75); % 50-fold with 0.75 training test ratio
+
+%% s9.PLOT 'ROC' CRUVES : SPARSITY VS MSE AIRFOILS DATASET
+k_rvr_BIC   = generate_kernel('rbf',1.78);
+k_rvr_MSE   = generate_kernel('rbf',1.35);
+k_csvr_BIC  = generate_kernel('rbf',2.154);
+k_csvr_MSE  = generate_kernel('rbf',1);
+k_nusvr_BIC = generate_kernel('rbf',2.154);
+k_nusvr_MSE = generate_kernel('rbf',1);
+models = [];
+% Optimal RVR model for BIC
+models = [models generate_RVR(k_rvr_BIC,100,0.3, 'RVR MSE/BIC')];
+% Optimal nu SVR model for BIC
+models = [models generate_SVR('nu',k_nusvr_BIC, 46.4, 0.112, '$\nu$-SVR BIC')];
+%Optimal nu SVR model for MSE
+models = [models generate_SVR('nu',k_nusvr_MSE, 21.54, 0.445, '$\nu$-SVR MSE')];
+%Optimal C SVR for BIC
+models = [models generate_SVR('C',k_csvr_BIC, 100, 0.46, '$\varepsilon$-SVR BIC')];
+%Optimal C SVR for MSE
+models = [models generate_SVR('C',k_csvr_MSE, 21.54, 0.1, '$\varepsilon$-SVR MSE')];
+% Generates plots : 
+tt_ratio = 0.75;
+n_fold   = 50;
+sparsity_vs_mse(Dataset, models,50,0.75); % 50-fold with 0.75 training test ratio
