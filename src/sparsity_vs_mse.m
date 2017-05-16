@@ -17,7 +17,7 @@ function sparsity_vs_mse(ds, models, nb_folds, training_ratio,highlight_arr)
 %          - training_ratio  <- ratio of training examples
 %          - highlight array <- points to highlight
 % ============= HEADER ============= %
-[mse,~, relevants] = cross_validate(ds, models, nb_folds, training_ratio, 0);
+[mse,~, relevants] = cross_validate(ds, models, nb_folds, training_ratio,ds.variance,0);
 n_models = length(models);
 mmse = mean(mse);
 nRelevant = mean(relevants)/size(ds.inputs,1);
@@ -43,7 +43,7 @@ if exist('highlight_arr','var')
    nRelevant_sort = nRelevant(index);
    a = scatter(nRelevant_sort,mmse_sort,50*ones(n_models,1),(1:length(nRelevant)),'filled');
    b = scatter(nRelevant(highlight_arr),mmse(highlight_arr),100*ones(1,length(highlight_arr)),[0 0 1],'LineWidth',2);
-   text(nRelevant(highlight_arr)-0.01+dx, mmse(highlight_arr)-0.001,{names{highlight_arr}},'FontSize',13,'FontWeight','bold');
+   text(nRelevant(highlight_arr)-0.01+dx, mmse(highlight_arr)-0.0011,{names{highlight_arr}},'FontSize',13,'FontWeight','bold');
    h = legend([a,b],{'With arbitrary (\nu,C,\sigma)','Optimal (\nu,C,\sigma)'});
    set(h,'FontSize',13);
 else
