@@ -165,7 +165,7 @@
 			}
 			\subsubsection{Performance}
 			{
-				We just named one of the major pros of using RVR - there is no need for using held-out methods to estimate hyper-parameters, as they are automatically determined through automatic relevance detection (expect for parametric basis functions). Also, it has been shown \cite{platt1998sequential, bishop2006pattern} that RVR leads to \emph{sparser solutions, without loss of generalization abilities} (on the contrary, the RVR usually performs better than the SVR). We will try to observe this observations in the experiments derived hereinafter.
+				We just named one of the major pros of using RVR - there is no need for using held-out methods to estimate hyper-parameters, as they are automatically determined through automatic relevance detection (expect for parametric basis functions). Also, it has been shown \cite{platt1998sequential, bishop2006pattern} that RVR leads to \emph{sparser solutions, without loss of generalization abilities} (on the contrary, the RVR usually performs better than the SVR). We will try to observe this in the experiments derived hereinafter.
 			}
 		}
 	}
@@ -176,7 +176,7 @@
 			\subsubsection{Artificial dataset}
 			{
 				The goal of using an artificial dataset is to be able to produce visual outputs to evaluate the performance of the two methods on a simple regression problem, hence the need to work in a one dimensional dataset. 
-				\newline The dataset was generated from the $sinc(\cdot)$ function, on the interval $[-5,5]$. Points were randomly sampled from this interval, applied the $sinc$ function and added a Gaussian distributed centered noise of variance $\sigma^2 = 0.01$.
+				\newline The dataset was generated from the $sinc(\cdot)$ function, on the interval $[-5,5]$. Points were randomly sampled from this interval, applied the $sinc$ function and added a Gaussian distributed centered noise of variance $\sigma^2 = 0.01$. 
 				\newline The following table sums up the dataset characteristics. 
 				\vspace{3pt}
 				
@@ -209,7 +209,7 @@
 				%	\hline
 				%\end{tabular}
 				%\end{center}
-				This dataset, known as the Airfoils Self-Noise dataset provides informations about design of various airfoils and physical environment (free stream velocity, angle of attack, chord length, frequency, suction side thickness) in order to predict the resulting sound pressure level in dB (see \cite{brooks1989} for full details). The following table sums up the dataset characteristics.
+				This dataset, known as the Airfoils Self-Noise dataset provides informations about design of various airfoils and physical environment (free stream velocity, angle of attack, chord length, frequency, suction side thickness) in order to predict the resulting sound pressure level in dB (see \cite{brooks1989} for full details). The following table sums up the dataset characteristics. All experiments were performed after standardization of the dataset.
 				
 				\vspace{3pt}
 				
@@ -295,16 +295,16 @@
 				 
 				\begin{figure}
 					\begin{center}
-						\includegraphics[width=0.85\linewidth]{gridsearch_epsSVR}
-						\caption{Grid search for $\epsilon-SVR$ over $\epsilon$, $C$ and $\sigma$ for sinc dataset \\ Best hyperparameters: $\epsilon = 0.17$, $C = 2.40$, $\sigma = 1.17$}
+						\includegraphics[width=0.85\linewidth]{gridSearch_epsSVR_BIC_sinc}
+						\caption{Grid search for $\epsilon$-SVR over $\epsilon$, $C$ and $\sigma$ for sinc dataset \\ Best hyperparameters: $\epsilon = 0.17$, $C = 2.40$, $\sigma = 1.17$}
 						\label{fig::gridSearch_epsSVR_sinc}
 					\end{center}
 				\end{figure}
 				
 				\begin{figure}
 					\begin{center}
-						\includegraphics[width=0.85\linewidth]{gridsearch_nuSVR}
-						\caption{Grid search for $\nu-SVR$ over $\nu$, $C$ and $\sigma$ for sinc dataset \\ Best hyperparameters: $\nu = 0.057$, $C = 1.52$, $\sigma = 1.13$}
+						\includegraphics[width=0.85\linewidth]{gridSearch_nuSVR_BIC}
+						\caption{Grid search for $\nu$-SVR over $\nu$, $C$ and $\sigma$ for sinc dataset \\ Best hyperparameters: $\nu = 0.057$, $C = 1.52$, $\sigma = 1.13$}
 						\label{fig::gridSearch_nuSVR_sinc}
 					\end{center}
 				\end{figure}
@@ -314,7 +314,7 @@
 			
 			Figures (\ref{fig::gridSearch_epsSVR_sinc}) and (\ref{fig::gridSearch_nuSVR_sinc}) display grid search results for both $\epsilon$-SVR and $\nu$-SVR in the form of heat-maps. If we fix $C$, we can distinctively see that the objective function forms a well. Changing the value of $C$ only changes the size of the well and its value but not the global behaviour, which suggests that this parameter has little influence on the result as long as values are not too far from the optimal. This leads us to believe that there is a global minimum for our objective function, that this minimum is captured by our grid and therefore that the result of our grid search is reliable. The form of the regions is slightly different between $\epsilon$-SVR and $\nu$-SVR but the general behaviour are the same. 
 			
-			For $\epsilon$-SVR, the plateau corresponding to highest values of $\epsilon$ corresponds to models where all points lie inside the $\epsilon$-tube. Finally, as expected, optimal models for both methods are very close, since they share most of their support vectors, therefore showing the equivalence between both approaches. Both lead to a total of 14 support vectors.
+			For $\epsilon$-SVR, the plateau corresponding to highest values of $\epsilon$ corresponds to models where all points lie inside the $\epsilon$-tube. Finally, as expected, optimal models for both methods are very close, since they share most of their support vectors, therefore showing the equivalence between both approaches. Both lead to a total of 14 support vectors, corresponding to a Mean square error of 0.013.
 			
 			 %As expected both selected models are almost the same therefore showing the equivalence between both approaches. Both lead to a total of 14 support vectors.
 
@@ -328,7 +328,7 @@
 						\label{fig::gridSearch_RVR_sinc}
 					\end{center}
 				\end{figure}
-			\noindent Figure (\ref{fig::gridSearch_RVR_sinc}) displays grid-search results for the RVR over kernel width $\sigma$, the only hyperparameter for this method. Found optimal value $1.28$ again confirms expectations that the order of magnitude is well chosen since it is close to the value chosen for $SVR$ methods.
+			\noindent Figure (\ref{fig::gridSearch_RVR_sinc}) displays grid-search results for the RVR over kernel width $\sigma$, the only hyperparameter for this method. Found optimal value $1.28$ again confirms expectations that the order of magnitude is well chosen since it is close to the value chosen for SVR methods. Corresponding number of relevant vectors is eight, leading to a MSE of 0.01. As a result, for this particular metric which demonstrates good properties concerning the sparsity/accuracy trade-off, as will be demonstrated in section (\ref{section::discussion}), the RVR optimal model leads to a sparser and more accurate solution than optimal SVR models.
 			
 			% TODO : some more commenting over the different figures (presence of a well and plateau, .. )
 			% TODO : motivate bounds
@@ -338,25 +338,40 @@
 							
 			\subsection{Real dataset}
 			{
-				\noindent For this dataset, no prior knowledge on the variance of the noise affecting the outputs was available. As a consequence, it had to be estimated before applying $BICSR$ metric to the dataset (add section to next section). As we have seen in the previous study, Relevance Vectors Regression always provides sparse solutions while estimating output noise via parameter $\beta$. To find a relevant value for kernel width, a first grid search was therefore performed for RVR with MSE (see \ref{fig::airfoils_gridsearch_RVR_MSE}). Corresponding estimation for $\beta$ was then used to evaluate $BICSR$ for all models. 
-				  \begin{figure}
-					\begin{center}
-						\includegraphics[width=0.8\linewidth]{airfoils_gridsearch_RVR_MSE}
-						\caption{Grid search for $RVR$  over $\sigma$ for airfoils dataset. Best hyperparameter: $\sigma = 1.25$}
-						\label{fig::airfoils_gridsearch_RVR_MSE}
-					\end{center}
-				\end{figure}
+				\noindent For this dataset, no prior knowledge on the variance of the noise affecting the outputs was available. As a consequence, it had to be estimated before applying $BICSR$ metric to the dataset (see section (\ref{section::discussion})). As we have seen in the previous study, Relevance Vectors Regression always provides sparse solutions while estimating output noise via parameter $\beta$. To find a relevant value for kernel width, a first grid search was therefore performed for RVR with MSE. Corresponding estimation for $\beta$ (equals to 2.4) was then used to evaluate $BICSR$ for all models.  				
 				We then performed grid search using 10-fold cross validation to estimate best values for algorithms hyperparameters. Due to higher dimensionality and to an higher number of points, training test ratio was decreased to 0.5.
 				
-				
+								
 				\begin{figure}
 					\begin{center}
-						\includegraphics[width=0.85\linewidth]{gridSearch_BIC_epsSVR_airfoils}
-						\caption{Grid search for $\epsilon$-SVR over $\epsilon$, $C$ and $\sigma$ for airfoils dataset \\ Best hyperparameters: $\epsilon = 1.0$, $C = 16.7$, $\sigma = 2.15$}
+						\includegraphics[width=0.85\linewidth]{gridSearch_epsSVR_BIC_airfoils}
+						\caption{Grid search for $\epsilon$-SVR over $\epsilon$, $C$ and $\sigma$ for airfoils dataset \\ Best hyperparameters: $\epsilon = 0.46$, $C = 100$, $\sigma = 2.15$}
 						\label{fig::gridSearch_BIC_epsSVR_airfoils}
 					\end{center}
 				\end{figure}
-				\noindent Results of grid search over $\sigma$, the kernel width for Relevance Vectors Regression are displayed on figure (\ref{fig::airfoils_gridSearch_RVR_BIC}). Optimal kernel width therefore corresponds to $\sigma = 1.25$ leading to an MSE of 0.19. Number of retrieved relevance vectors is 94. 
+				
+				
+								
+				\begin{figure}
+					\begin{center}
+						\includegraphics[width=0.85\linewidth]{gridSearch_nuSVR_BIC_airfoils}
+						\caption{Grid search for $\nu$-SVR over $\nu$, $C$ and $\sigma$ for airfoils dataset \\ Best hyperparameters: $\nu = 0.11$, $C = 46.4$, $\sigma = 2.15$}
+						\label{fig::gridSearch_BIC_nuSVR_airfoils}
+					\end{center}
+				\end{figure}
+				
+				\noindent Figures (\ref{fig::gridSearch_BIC_epsSVR_airfoils}) and (\ref{fig::gridSearch_BIC_nuSVR_airfoils}) expose obtained results for both $nu$-SVR and $\epsilon$-SVR. General behavior of the algorithms to the different hyperparameters variations seemed consistent with observations made on the artificial sinc dataset.  Again, distinct wells could be observed when displaying the objective function evolution leading to the conclusion that  found optimums are global. For $\epsilon$-SVR, the optimal hyperparameters values lead to a Mean Square Error of 0.185 for 295 support vectors while $\nu$-SVR yields 249 support vectors for a MSE of 0.20.
+				
+				  \begin{figure}
+					\begin{center}
+						\includegraphics[width=0.8\linewidth]{airfoils_gridsearch_RVR_BIC}
+						\caption{Grid search for RVR  over $\sigma$ for airfoils dataset. Best hyperparameter: $\sigma = 1.78$}
+						\label{fig::airfoils_gridsearch_RVR_BIC}
+					\end{center}
+				\end{figure}
+				
+
+				\noindent Results of grid search over $\sigma$, the kernel width for Relevance Vectors Regression are displayed on figure (\ref{fig::airfoils_gridsearch_RVR_BIC}). Optimal kernel width therefore corresponds to $\sigma = 1.78$ leading to an MSE of 0.20. Number of retrieved relevance vectors is 66. Again, for this real dataset,  the RVR optimum leads to equivalent generalization performance but with a lot more sparsity.
 				
 
 				
@@ -443,7 +458,7 @@
 		{
 			If we focussed until now on the tradeoff between sparsity and generalization performances, their are other aspects worthy of discussion. Namely, the two considered methods (SVR and RVR) could be compared on the basis of \emph{generalization far from the data}. 
 			\newline On this particular question, both methods show the same drawbacks. Indeed, the predicted function far from data is limited to the learned bias (at least for centered kernels, like the Gaussian RBF). One could argue that this drawback is limited for the RVR, as the variance of the predictive distribution should grow as we get far from the data, indicating that predictions are not to be trusted with. However, (\ref{eq::predictive}) proves that this assumption does not hold, as for the RVR the predictive distribution is higher close from the data, and constant far from it. 
-			\newline Therefore, both methods are not to be trusted with far from the data (they only capture the regressive function's mean and not the general trend). Other Bayesian method, like Gaussian Process Regression would probably do a better job at this particular task - but use the entire dataset when making predictions. 
+			\newline Therefore, both methods are not to be trusted with far from the data (they only capture the regressive function's mean and not the general trend). Other Bayesian methods, like Gaussian Process Regression would probably do a better job at this particular task - but use the entire dataset when making predictions. 
 		}
 	}
 	\section{Conclusion}
