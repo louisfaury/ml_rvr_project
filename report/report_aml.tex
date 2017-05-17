@@ -15,7 +15,7 @@
 \usepackage[hang,small]{caption}
 \graphicspath{{Images/}}
 
-\title{Relevance Vector Machine and Sparse Vector Regression : a sparsity versus performance study}
+\title{Relevance Vector Machine and Sparse Vector Regression: a sparsity versus performance study}
 \author{
 	\IEEEauthorblockN{Hadrien Hendrikx}
 	\IEEEauthorblockA{
@@ -54,17 +54,17 @@
 	
 	\section{Introduction}
 	{
-		We hereinafter focus on regression tasks : from a dataset $\{X,\mathbf{t}\} \in\mathbb{R}^{N,d}\times\mathbb{R}^N$, we wish to learn a function $f$ such that $f(X)\simeq \mathbf{t}$. 
+		We hereinafter focus on regression tasks: from a dataset $\{X,\mathbf{t}\} \in\mathbb{R}^{N,d}\times\mathbb{R}^N$, we wish to learn a function $f$ such that $f(X)\simeq \mathbf{t}$. 
 		\newline The simplest method to perform such a task is to consider that $f(\cdot)$ is a linear function of a non-linear mapping of the input $x$, corrupted by a normally distributed noise of precision  $\beta$ 
 		\begin{equation}
 			t = w^T\phi(x) + \eta, \quad \condp{\eta}{\beta} = \normalDb{\eta}{0}{\beta^{-1}} 
 		\end{equation} 
-		with $\phi\, : \, \mathbb{R}^d \to \mathbb{R}^m$ a non-linear transformation. 
-		Therefore, $p(t\, \vert \, w,\beta)\sim \normalDb{t}{w^T\phi(x)}{\beta^{-1}}$ and the \emph{maximum-likelihood} solution is given by the minimizer of the opposite of the log-likelihood : 
+		with $\phi\,: \, \mathbb{R}^d \to \mathbb{R}^m$ a non-linear transformation. 
+		Therefore, $p(t\, \vert \, w,\beta)\sim \normalDb{t}{w^T\phi(x)}{\beta^{-1}}$ and the \emph{maximum-likelihood} solution is given by the minimizer of the opposite of the log-likelihood: 
 		\begin{equation}
 			w_{MLE} = \argmin{w}{\frac{1}{2}\sum_{n=1}^N\left\{w^T\phi(x_n) - t_n\right\}^2}
 		\end{equation}
-		To avoid overfitting, a regularizer term is often added to the cost function :
+		To avoid overfitting, a regularizer term is often added to the cost function:
 			\begin{equation} 
 							E(w) = \frac{1}{2}\sum_{n=1}^N\left\{w^T\phi(x_n) - t_n\right\}^2 + \frac{\lambda}{2}\lVert w \rVert ^2
 							\label{eq::ridge}
@@ -77,7 +77,7 @@
 		{
 			The Support Vector machine for Regression (SVR) extends the SVM method for regression tasks.
 			\newline
-			To obtain a sparse solution, the likelihood term in (\ref{eq::ridge}) is replaced by an $\eps$-\emph{insensitive error function} (see \cite{vapnik1995nature}) denoted $E_\eps(\cdot)$ with : 
+			To obtain a sparse solution, the likelihood term in (\ref{eq::ridge}) is replaced by an $\eps$-\emph{insensitive error function} (see \cite{vapnik1995nature}) denoted $E_\eps(\cdot)$ with: 
 			\begin{equation}
 				\label{eq::loss}
 				E_\eps(y(x)-t) = \left\{
@@ -86,13 +86,13 @@
 								& \vert y(x)-t\vert \quad &\text{otherwise}  
 								\end{aligned}\right.
 			\end{equation}
-			Therefore, the quantity to be minimized can be expressed as : 
+			Therefore, the quantity to be minimized can be expressed as: 
 			\begin{equation}
 				J(w) = \frac{C}{n}\sum_{n=1}^N E_\eps(w^T\phi(x_n)-t_n) + \frac{1}{2}\lVert w \rVert ^2
 			\end{equation}
 			where $C$ is a regularization parameter. 
 			\newline 
-			As for the SVM, one can introduce \emph{slack variables} in order to transform this optimization program into a Quadratic Programming (QP) problem (quadratic objective, linear constraints) : 
+			As for the SVM, one can introduce \emph{slack variables} in order to transform this optimization program into a Quadratic Programming (QP) problem (quadratic objective, linear constraints): 
 			
 			\begin{mini}|s|[2]
   				 {w,b}{\frac{1}{2}\lVert w \rVert^2 + \frac{C}{n}\sum_{i=1}^n{\left(\xi_i + \hat{\xi}_i\right)}}
@@ -102,7 +102,7 @@
 				\addConstraint{w^T\phi(x_i)+b - \eps - \hat{\xi}_i  }{\leq t_i,\quad}{i=1,\hdots,n}
 			\end{mini}
 				
-			Once the problem solved, predictions are made using : 
+			Once the problem solved, predictions are made using: 
 			\begin{equation}
 				y(x) = \sum_{n=1}^N (a_n - \hat{a}_n)k(x,x_n) + b
 			\end{equation}
@@ -113,21 +113,21 @@
 		{
 			The SVR therefore provides a useful tool for obtaining sparse regression machine. However, it suffers from a \emph{number of limitations}, such as an output representation as decision rather than posterior probability, the need to estimate hyper-parameters (kernel width, penalization parameter) via \emph{held-out methods} (like cross-validation), or the need for the kernel to be a Mercer kernel type (positive definite). 
 			\newline
-			The Relevance Vector Machine for regression is a \emph{Bayesian sparse kernel technique} that shares many of the SVR's characteristics while avoiding its limitations. It instantiates a model intended to mirror the structure of the SVR : 
+			The Relevance Vector Machine for regression is a \emph{Bayesian sparse kernel technique} that shares many of the SVR's characteristics while avoiding its limitations. It instantiates a model intended to mirror the structure of the SVR: 
 			\begin{equation}
 				y(x) = \sum_{n=1}^{N+1}w_nk(x,x_n)
 			\end{equation}
-			where the bias $b$ is included in the predictor $w$ and $k(\cdot,\cdot)$ is an arbitrary kernel (not necessarily positive definite). Assuming i.i.d data sample with Gaussian noise of precision $\beta$, the likelihood writes : 
+			where the bias $b$ is included in the predictor $w$ and $k(\cdot,\cdot)$ is an arbitrary kernel (not necessarily positive definite). Assuming i.i.d data sample with Gaussian noise of precision $\beta$, the likelihood writes: 
 			\begin{equation}\label{eq::rvr_likelihood}
 				\condp{\mathbf{t}}{X,w,\beta} = \prod_{n=1}^N \normalDb{t_n}{y(x_n)}{\beta^{-1}}
 			\end{equation}
-			The predictor $w$ is given a centered Gaussian prior distribution :
+			The predictor $w$ is given a centered Gaussian prior distribution:
 			\begin{equation}
 				\condp{w}{\alpha} = \prod_{i=1}^{N+1} \normalDb{w_i}{0}{\alpha_i^{-1}}
 			\end{equation}
 			introducing a separate precision parameter $\alpha_i$ for each weight parameter $w_i$. 
 			\newline 
-			This leads to a Gaussian posterior distribution over $w$ : 
+			This leads to a Gaussian posterior distribution over $w$: 
 			\begin{equation}
 				\begin{aligned}
 					\condp{w}{\mathbf{t},X,\alpha,\beta} &= \condp{\mathbf{t}}{w,X,\beta}\condp{w}{\alpha}\\
@@ -145,7 +145,7 @@
 			In a full Bayesian approach, $\alpha$ and $\beta$ are both given prior distributions. However, this leads to intractable computations when computing predictions. The use of \emph{empirical Bayes} solves this problem, by approximating $\alpha$ and $\beta$ by their maximum-a-posteriori value (also known as the \emph{evidence approximation} or type-2 maximum likelihood). \newline
 			As a result of approximation, a proportion of parameters $\alpha_i$ are driven to infinite values, constraining the corresponding weights $w_i$ to have $0$ mean and infinite precision, and hence are set to $0$. The resulting predictions are therefore sparse in data-points, and the inputs $\{x_n\}$ corresponding to non-zero weights are called \emph{relevance vectors}. Once the optimal values $\alpha^*$ and $\beta^*$ found, the predictive distribution over $y$ can therefore be computed using $\alpha^*$ and $\beta^*$. 
 			\newline The sparsity analysis of the RVR leads to a practical algorithm for optimizing the hyper-parameters that has significant speed advantages, and is referred to as \emph{automatic relevance determination}. The full algorithm and its justification can be found in \cite{bishop2006pattern} and \cite{tipping2003relevance}.
-			\newline Furthermore, the RVR provides a posterior distribution over the predictor, leading to the following \emph{predictive distribution} (unlike the SVR which only provide a posterior decision) : 
+			\newline Furthermore, the RVR provides a posterior distribution over the predictor, leading to the following \emph{predictive distribution} (unlike the SVR which only provides a posterior decision): 
 			\begin{equation}
 				\begin{aligned}
 					\condp{t}{x,X,\mathbf{t},\alpha,\beta} &= \int_w \condp{t}{w,x,\beta}\condp{w}{X,\mathbf{t},\alpha}dw\\
@@ -176,7 +176,7 @@
 			\subsubsection{Artificial dataset}
 			{
 				The goal of using an artificial dataset is to be able to produce visual outputs to evaluate the performance of the two methods on a simple regression problem, hence the need to work in a one dimensional dataset. 
-				\newline The dataset was generated from the $sinc(\cdot)$ function, on the interval $[-5,5]$. Points were randomly sampled from this interval, applied the $sinc$ function and added a Gaussian distributed centered noise of variance $\sigma^2 = 0.01$. 
+				\newline The dataset was generated from the $sinc(\cdot)$ function, on the interval $[-5,5]$. Points were randomly sampled from this interval, applied the $sinc$ function and added a Gaussian distributed centered noise of variance $\sigma_n^2 = 0.01$. 
 				\newline The following table sums up the dataset characteristics. 
 				\vspace{3pt}
 				
@@ -209,7 +209,7 @@
 				%	\hline
 				%\end{tabular}
 				%\end{center}
-				This dataset, known as the Airfoils Self-Noise dataset provides informations about design of various airfoils and physical environment (free stream velocity, angle of attack, chord length, frequency, suction side thickness) in order to predict the resulting sound pressure level in dB (see \cite{brooks1989} for full details). The following table sums up the dataset characteristics. All experiments were performed after standardization of the dataset.
+				This dataset, known as the Airfoils Self-Noise dataset provides informations about the design of various airfoils and physical environment (free stream velocity, angle of attack, chord length, frequency, suction side thickness) in order to predict the resulting sound pressure level in dB (see \cite{brooks1989} for full details). The following table sums up the dataset characteristics. All experiments were performed after standardization of the dataset.
 				
 				\vspace{3pt}
 				
@@ -230,23 +230,23 @@
 			
 			\subsubsection{Support Vector Regression}
 			{
-				We implemented both the $\eps$-SVR and the $\nu$-SVR on the artificial dataset. We used the \texttt{libsvm} library (see \cite{libsvm}) with a radial-basis function kernel : 
+				We implemented both the $\eps$-SVR and the $\nu$-SVR on the artificial dataset. We used the \texttt{libsvm} library (see \cite{libsvm}) with a radial-basis function kernel: 
 				\begin{equation}
 					\forall x,x', \quad k(x,x') = \exp{\left( -\frac{\lVert x -x'\rVert^2}{\sigma^2}\right)}
 				\end{equation}
 				
-				We therefore tuned three hyper-parameters : $\sigma$ (kernel width), $C$ (penalization factor) and $\nu$ (resp. $\eps$) for the $\nu$-SVR (resp. $\eps$-SVR). Figures (\ref{epsSVR}) and (\ref{nuSVR}) display the regressive function obtained for three given parameters for both methods on the artificial dataset. For the $\nu$-SVR, the corresponding $\eps$-insensitive tube was computed thanks to the values of the final Lagrange multipliers (a Lagrange multiplier strictly inferior to $C$ indicates a point laying on the $\eps$-tube). 
+				We therefore tuned three hyper-parameters: $\sigma$ (kernel width), $C$ (penalization factor) and $\nu$ (resp. $\eps$) for the $\nu$-SVR (resp. $\eps$-SVR). Figures (\ref{epsSVR}) and (\ref{nuSVR}) display the regressive function obtained for three given parameters for both methods on the artificial dataset. For the $\nu$-SVR, the corresponding $\eps$-insensitive tube was computed thanks to the values of the final Lagrange multipliers (a Lagrange multiplier strictly inferior to $C$ indicates a point laying on the $\eps$-tube). 
 				\begin{figure}
 					\begin{center}
 						\includegraphics[width=0.85\linewidth]{nuSVR_nu02_C100_width02}
-						\caption{$\nu$-SVR with : $C=100$, $\nu=0.2$, $\sigma = 1.5$}
+						\caption{$\nu$-SVR with: $C=100$, $\nu=0.2$, $\sigma = 1.5$}
 						\label{nuSVR}
 					\end{center}
 				\end{figure}
 				\begin{figure}				
 					\begin{center}
 						\includegraphics[width=0.85\linewidth]{epsSVR_eps015_C50_width2}
-						\caption{$\eps$-SVR with : $C=50$, $\eps=0.15$, $\sigma = 2$}
+						\caption{$\eps$-SVR with: $C=50$, $\eps=0.15$, $\sigma = 2$}
 						\label{epsSVR}
 					\end{center}
 				\end{figure}
@@ -258,7 +258,7 @@
 				\begin{figure}
 					\begin{center}
 						\includegraphics[width=0.85\linewidth]{RVR_width1}
-						\caption{RVR with : $\sigma = 1$}
+						\caption{RVR with: $\sigma = 1$}
 						\label{nuSVR}
 					\end{center}
 				\end{figure}
@@ -276,16 +276,16 @@
 				BIC = -2ln(L) + kln(N)
 			\end{equation}
 			where $L$ corresponds to the likelihood of the model, $k$ is the number of parameters of the model and $N$ is the number of data-points. In the particular case we wish to tackle (\textit{i.e} measuring a trade-off between regression performance and sparsity), the BIC appears to be a reasonable metric, although some adjustments are needed to adapt it to a regression task. 
-			Assuming independent, normally distributed noise, the likelihood can naturally be related to the Mean Square Error (MSE) :
+			Assuming independent, normally distributed noise, the likelihood can naturally be related to the Mean Square Error (MSE):
 			\begin{equation}
-				ln(L) = -\frac{N}{2\sigma^2}MSE
+				ln(L) = -\frac{N}{2\sigma_n^2}MSE
 			\end{equation}
-			 where $\sigma^2$ corresponds to the variance of the dataset's noise.
+			 where $\sigma_n^2$ corresponds to the variance of the dataset's noise.
 			 \newline For both algorithms, the number of parameters $k$ is directly proportional to the number of relevant vectors (respectively support vectors). Therefore a reasonable metric to measure the goodness of a sparse regression model would be 
 			\begin{equation}
-				BICSR =  N\frac{MSE}{\sigma^2} + N_{SV}ln(N)
+				BICSR =  N\frac{MSE}{\sigma_n^2} + N_{SV}ln(N)
 			\end{equation}
-			where ${N_{SV}}$ is the number of relevance (or support) vectors, and $BICSR$ holds for Bayesian Information Criterion for Sparse Regression. Minimizing this metric indeed implies minimizing the MSE while linearly penalizing the number of support vectors. Some other kind of penalization (quadratic, exponential) could also be used. The discussion of the choice of this penalization, as well as the validation of the well behavior of this metric is held in (\ref{section::discussion}). 
+			where ${N_{SV}}$ is the number of relevance (or support) vectors, and $BICSR$ holds for Bayesian Information Criterion for Sparse Regression. Minimizing this metric indeed implies minimizing the MSE while linearly penalizing the number of support vectors. Some other kinds of penalization (quadratic, exponential) could also be used. The discussion of the choice of this penalization, as well as the validation of the well behavior of this metric is held in (\ref{section::discussion}). 
 			
 			We wish to emphasize the fact that this metric is not the commonly used BIC metric, but rather an adaptation of it to sparse regression (and therefore a measure of trade-off between performance (MSE) and sparsity).
 			}
@@ -330,9 +330,9 @@
 				\end{figure}
 			\noindent Figure (\ref{fig::gridSearch_RVR_sinc}) displays grid-search results for the RVR over kernel width $\sigma$, the only hyperparameter for this method. The optimal value found at $1.28$ again confirms expectations that the order of magnitude is well chosen since it is close to the value chosen for SVR methods. The corresponding number of relevant vectors is eight, leading to a MSE of 0.01. As a result, for this particular metric which demonstrates good properties concerning the sparsity/accuracy trade-off - as will be demonstrated in section (\ref{section::discussion}) - the RVR optimal model leads to a sparser and more accurate solution than optimal SVR models.
 			
-			% TODO : some more commenting over the different figures (presence of a well and plateau, .. )
-			% TODO : motivate bounds
-			% TODO : use the following rather in the discussion part 
+			% TODO: some more commenting over the different figures (presence of a well and plateau, .. )
+			% TODO: motivate bounds
+			% TODO: use the following rather in the discussion part 
 %			The $BIC$ criterion is a way to take model complexity into account when choosing an appropriate model. In our setting, the complexity is governed by the number of support vectors used and we are interested in the relationship between sparsity (the more support vectors the more complex the function can be) and performance (measured by the $MSE$). We analyze this tradeoff in figure \ref{fig::ROC_sinc} for the $sinc$ dataset. We can see that in terms of pure $MSE$ minimization both $\nu-SVR$ and $C-SVR$ perform slightly better than $RVR$ but at a very high cost in terms of sparsity since they have respectively $3$ and almost $5$ times more support vectors. For the hyperparameters that minimize the $BIC$ criterion, $SVR$ achieves a sparsity that is comparable to that of $RVR$ (although still there are still more support vectors) but this comes at the cost of a sharp rise of the $MSE$ of around $10\%$ for the $\nu-SVR$ and almost $50\%$ for the $C-SVR$. We can conclude that $RVR$ should be prefered as soon as the sparsity of the model is a concern.
 			}
 							
@@ -360,7 +360,7 @@
 					\end{center}
 				\end{figure}
 				
-				\noindent Figures (\ref{fig::gridSearch_BIC_epsSVR_airfoils}) and (\ref{fig::gridSearch_BIC_nuSVR_airfoils}) expose obtained results for both $nu$-SVR and $\epsilon$-SVR. General behavior of the algorithms to the different hyperparameters variations seemed consistent with observations made on the artificial sinc dataset.  Again, distinct wells could be observed when displaying the objective function evolution leading to the conclusion that  found optimums are global. For $\epsilon$-SVR, the optimal hyperparameters values lead to a Mean Square Error of 0.16 for 295 support vectors while $\nu$-SVR yields 249 support vectors for a MSE of 0.18.
+				\noindent Figures (\ref{fig::gridSearch_BIC_epsSVR_airfoils}) and (\ref{fig::gridSearch_BIC_nuSVR_airfoils}) expose obtained results for both $\nu$-SVR and $\epsilon$-SVR. General behavior of the algorithms to the different hyperparameters variations seemed consistent with observations made on the artificial sinc dataset.  Again, distinct wells could be observed when displaying the objective function evolution leading to the conclusion that  found optimums are global. For $\epsilon$-SVR, the optimal hyperparameters values lead to a Mean Square Error of 0.16 for 295 support vectors while $\nu$-SVR yields 249 support vectors for a MSE of 0.18.
 				
 				  \begin{figure}
 					\begin{center}
@@ -386,21 +386,21 @@
 		\label{section::discussion}
 		\subsection{The BICSR metric}
 		{
-			The use of the hand-designed BICSR metric deserves some further justification. As a reminder, the BICSR writes : 
+			The use of the hand-designed BICSR metric deserves some further justification. As a reminder, the BICSR writes: 
 			\begin{equation}
-				BICSR = N\frac{MSE}{\sigma^2} + kln(N)
+				BICSR = N\frac{MSE}{\sigma_n^2} + kln(N)
 			\end{equation}
-			with $N$ the number of datapoints, $MSE$ the mean-squared error on the dataset, $\sigma^2$ the dataset's noise variance and $k$ the number of support vectors. 
+			with $N$ the number of datapoints, $MSE$ the mean-squared error on the dataset, $\sigma_n^2$ the dataset's noise variance and $k$ the number of support vectors. 
 			\subsubsection{Model likelihood estimation}
 			{
-				When applied to an artificial dataset, the noise variance $\sigma^2$ is known. However, this parameter must be estimated for any arbitrary dataset. Hence, in order to find, for a given model, its related optimal hyper-parameter (with respect to the BICSR), we first need, equivalently, to estimate the noise precision coefficient $\beta = \frac{1}{\sigma^2}$. \newline
-				The RVR already provides a rather robust estimate of $\beta$, without bootstrapping from any initial value (automatic relevance determination), and without need for much parameters tuning. We therefore suggest the following approach for determining $\beta$ : 
+				When applied to an artificial dataset, the noise variance $\sigma_n^2$ is known. However, this parameter must be estimated for any arbitrary dataset. Hence, in order to find, for a given model, its related optimal hyper-parameter (with respect to the BICSR), we first need, equivalently, to estimate the noise precision coefficient $\beta = \frac{1}{\sigma_n^2}$. \newline
+				The RVR already provides a rather robust estimate of $\beta$, without bootstrapping from any initial value (automatic relevance determination), and without need for much parameters tuning. We therefore suggest the following approach for determining $\beta$: 
 				\begin{enumerate}
-					\item Run a cross-validation for the RVR with a the MSE metric on the dataset
+					\item Run a cross-validation for the RVR with the MSE metric on the dataset
 					\item Identify the optimal kernel-width (or equivalently any given kernel hyperparameter)
-					\item Set $\sigma = \frac{1}{\sqrt{\beta}}$ with $\beta$ the precision given by the RVR with the previously defined kernel width
+					\item Set $\sigma_n = \frac{1}{\sqrt{\beta}}$ with $\beta$ the precision given by the RVR with the previously defined kernel width
 				\end{enumerate}
-				To justify the use of this method, we applied it on our artificial dataset, and measured an empirical noise variance $\sigma^2 = 0.008$ instead of $0.01$. 
+				To justify the use of this method, we applied it on our artificial dataset, and measured an empirical noise variance $\sigma_n^2 = 0.008$ instead of $0.01$. 
 			}
 			
 			\subsubsection{BICSR validation}
@@ -413,7 +413,7 @@
 						\label{fig::bicsr_valid}
 					\end{center}
 				\end{figure}
-				\newline As previously introduced, the BICSR metric measures the tradeoff between MSE and sparsity. It linearly penalizes the number of support vectors, proportionally to $ln N$. We wondered if some other (ultimately better, depending on the end goal) tradeoff could be found by changing the nature of this penalization. For instance, we could think of a non-linear penalization of the numbers of support vectors (a quadratic penalization would lead to sparser models, and a logarithmic one to more accurate ones). Figure (\ref{fig::bicsr_penal}) displays the MSE versus sparsity models found when varying the nature of the penalization (indicated below the related point). Hence, it seems that our initial metric (designated as BISCR) naturally finds a rather interesting tradeoff for generalization against sparsity.  We will therefore use it as our baseline metric for the different model comparisons  - those conclusions hold for all the different methods - $\eps$-SVR, $RVR$ (even if for this last one, both MSE and BICSR are minimized for a comparable kernel width). 
+				\newline As previously introduced, the BICSR metric measures the tradeoff between MSE and sparsity. It linearly penalizes the number of support vectors, proportionally to $ln N$. We wondered if some other (ultimately better, depending on the end goal) tradeoff could be found by changing the nature of this penalization. For instance, we could think of a non-linear penalization of the numbers of support vectors (a quadratic penalization would lead to sparser models, and a logarithmic one to more accurate ones). Figure (\ref{fig::bicsr_penal}) displays the MSE versus sparsity models found when varying the nature of the penalization (indicated below the related point). Hence, it seems that our initial metric (designated as BISCR) naturally finds a rather interesting tradeoff for generalization against sparsity.  We will therefore use it as our baseline metric for the different model comparisons  - those conclusions hold for all the different methods - $\eps$-SVR, RVR (even if for this last one, both MSE and BICSR are minimized for a comparable kernel width). 
 				\begin{figure}[h!]
 					\begin{center}
 						\includegraphics[width=0.95\linewidth]{bic_penal_eval}
@@ -437,7 +437,7 @@
 				
 				Figure~(\ref{fig::ROC_sinc}) allows us to see how the different methods react to the trade-off sparsity versus performance.
 				
-				First of all, we see that except from the $\varepsilon$-SVR model which minimizes the BICSR, all models lead to comparable MSE (around $15\%$ difference). However, there is a big gap in terms of sparsity since SVR with the MSE metrics have about twice as much support vectors as the SVR models that minimize the BICSR metric.
+				First of all, we see that except from the $\varepsilon$-SVR model which minimizes the BICSR, all models lead to comparable MSE (around $15\%$ difference). However, there is a big gap in terms of sparsity since SVR with the MSE metric have about twice as much support vectors as the SVR models that minimize the BICSR metric.
 				
 				The key insights from this figure are that SVR methods with MSE objective have many support vectors, and that the BICSR metric leads to sparser solutions with minimal increase of the MSE. RVR achieves the best sparsity by far with minimal MSE increase and there is almost no difference between the models selected by the two different metrics.
 				
@@ -464,7 +464,7 @@
 	}
 	\section{Conclusion}
 	{
-		In this report, we introduced two sparse regression algorithms : Support Vector Regression (SVR) and Relevance Vector Regression (RVR). After discussing their theoretical derivations and inherent advantages and drawbacks, we evaluated both methods under the angle of the tradeoff found between performance (measured by mean-square error) and sparsity (number of relevant / support vectors, used for predictions at test time). 
+		In this report, we introduced two sparse regression algorithms: Support Vector Regression (SVR) and Relevance Vector Regression (RVR). After discussing their theoretical derivations and inherent advantages and drawbacks, we evaluated both methods under the angle of the tradeoff found between performance (measured by mean-square error) and sparsity (number of relevant / support vectors, used for predictions at test time). 
 		\newline 
 		With the use of a sparsity vs performance metric (BICSR, derived from the Bayesian Information Criterion), we discussed how well both algorithms performed at this particular task. After justifying this metric, we also showed that its different variations could help tailor a model given the end goal one aims to achieve (performance, high sparsity, tradeoff between the two). This discussion was held around two datasets (a low dimensional artificial one as well as a real, higher dimensional one). 
 		\newline The outline of this discussion is that the RVR naturally finds the best tradeoff between performance and sparsity. If this comes at the fact that this algorithm is highly consistant, this also means that it can hardly be tuned to achieve almost perfect regression (if the end goal is to minimize the MSE). As expected, if the SVR can be tuned to achieve a fairly interesting sparsity level, it can also be designed to reach excellent levels of regression. 
