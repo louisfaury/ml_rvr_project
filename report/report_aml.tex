@@ -57,7 +57,7 @@
 		We hereinafter focus on regression tasks: from a dataset $\{X,\mathbf{t}\} \in\mathbb{R}^{N,d}\times\mathbb{R}^N$, we wish to learn a function $f$ such that $f(X)\simeq \mathbf{t}$. 
 		\newline The simplest method to perform such a task is to consider that $f(\cdot)$ is a linear function of a non-linear mapping of the input $x$, corrupted by a normally distributed noise of precision  $\beta$ 
 		\begin{equation}
-			t = w^T\phi(x) + \eta, \quad \eta \sim \normalDb{\eta}{0}{\beta^{-1}} 
+			t = w^T\phi(x) + \eta, \quad \condp{\eta}{\beta} = \normalDb{\eta}{0}{\beta^{-1}} 
 		\end{equation} 
 		with $\phi\,: \, \mathbb{R}^d \to \mathbb{R}^m$ a non-linear transformation. 
 		Therefore, $p(t\, \vert \, w,\beta)\sim \normalDb{t}{w^T\phi(x)}{\beta^{-1}}$ and the \emph{maximum-likelihood} solution is given by the minimizer of the opposite of the log-likelihood: 
