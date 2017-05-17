@@ -22,7 +22,7 @@ Basically performs the same as S4, without different penalizing terms (stays wit
 Plots the different optimal models (according to BICSR and MSE) on the MSE / sparsity graph. 
 
 ## Library gestion
-* Put libsvm source code in libsvm/
+* Put libsvm source code in libsvm/ (and don't forget to compile !)
 * Put sparseBayes source code in sparseBayes/ 
 
 ## Online popularity dataset
