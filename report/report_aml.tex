@@ -429,7 +429,7 @@
 				
 				\begin{figure}
 					\begin{center}
-						\includegraphics[width=0.95\linewidth]{ROC_sinc}
+						\includegraphics[width=0.95\linewidth]{ROC_sinc.png}
 						\caption{Evaluation of the tradeoff between raw performance ($MSE$) and sparsity, for each method and each metric on the sinc dataset.}
 						\label{fig::ROC_sinc}
 					\end{center}
@@ -443,7 +443,7 @@
 				
 				\begin{figure}
 					\begin{center}
-						\includegraphics[width=0.95\linewidth]{airfoils_sparsity_MSE}
+						\includegraphics[width=0.95\linewidth]{airfoils_sparsity_MSE.png}
 						\caption{Evaluation of the tradeoff between raw performance ($MSE$) and for each method and each metric for the airfoils dataset.}
 						\label{fig::ROC_airfoils}
 					\end{center}
@@ -458,7 +458,7 @@
 		\subsection{Behavior far from data}
 		{
 			If we focussed until now on the tradeoff between sparsity and generalization performances, their are other aspects worthy of discussion. Namely, the two considered methods (SVR and RVR) could be compared on the basis of \emph{generalization far from the data}. 
-			\newline On this particular question, both methods show the same drawbacks. Indeed, the predicted function far from data is limited to the learned bias (at least for centered kernels, like the Gaussian RBF). One could argue that this drawback is limited for the RVR, as the variance of the predictive distribution should grow as we get far from the data, indicating that predictions are not to be trusted with. However, (\ref{eq::predictive}) proves that this assumption does not hold, as for the RVR the predictive distribution is higher close from the data, and constant far from it. 
+			\newline On this particular question, both methods show the same drawbacks. Indeed, the predicted function far from data is limited to the learned bias (at least for centered kernels, like the Gaussian RBF). One could argue that this drawback is limited for the RVR, as the variance of the predictive distribution should grow as we get far from the data, indicating that predictions are not to be trusted with. However, (\ref{eq::predictive}) shows that this assumption does not hold, as for the RVR the predictive distribution is higher close from the data, and constant far from it. 
 			\newline Therefore, both methods are not to be trusted with far from the data (they only capture the regressive function's mean and not the general trend). Other Bayesian methods, like Gaussian Process Regression would probably do a better job at this particular task - but use the entire dataset when making predictions. 
 		}
 	}
@@ -467,8 +467,8 @@
 		In this report, we introduced two sparse regression algorithms: Support Vector Regression (SVR) and Relevance Vector Regression (RVR). After discussing their theoretical derivations and inherent advantages and drawbacks, we evaluated both methods under the angle of the tradeoff found between performance (measured by mean-square error) and sparsity (number of relevant / support vectors, used for predictions at test time). 
 		\newline 
 		With the use of a sparsity vs performance metric (BICSR, derived from the Bayesian Information Criterion), we discussed how well both algorithms performed at this particular task. After justifying this metric, we also showed that its different variations could help tailor a model given the end goal one aims to achieve (performance, high sparsity, tradeoff between the two). This discussion was held around two datasets (a low dimensional artificial one as well as a real, higher dimensional one). 
-		\newline The outline of this discussion is that the RVR naturally finds the best tradeoff between performance and sparsity. If this comes at the fact that this algorithm is highly consistant, this also means that it can hardly be tuned to achieve almost perfect regression (if the end goal is to minimize the MSE). As expected, if the SVR can be tuned to achieve a fairly interesting sparsity level, it can also be designed to reach excellent levels of regression. 
-		\newline The question of complexity (at training time) was tackled on a purely theoretical point of view. Also, some further discussions were held regarding the generalisation abilities of both model (regarding predictions made far from learning data) - to conclude that for that topic, both methods behave in fairly similar ways. 
+		\newline The outline of this discussion is that the RVR naturally finds the best tradeoff between performance and sparsity. If this comes from the fact that this algorithm is highly consistant, this also means that it can hardly be tuned to achieve almost perfect regression (if the end goal is to minimize the MSE). As expected, if the SVR can be tuned to achieve a fairly interesting sparsity level, it can also be designed to reach excellent levels of regression. 
+		\newline The question of complexity (at training time) was tackled on a purely theoretical point of view since both methods used come from different libraries and performances benchmarks would therefore add no value. Also, some further discussions were held regarding the generalisation abilities of both model (regarding predictions made far from learning data) - to conclude that for that topic, both methods behave in fairly similar ways. 
 	}
 	
 	\bibliographystyle{plain}
