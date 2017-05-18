@@ -17,11 +17,11 @@ addpath(genpath('../lib'))
 
 %% s1.LOAD DATASET
 % Loads 'sinc' dataset
-%  name = 'sinc';
-%  plot_flag = 1;
+  name = 'sinc';
+  plot_flag = 1;
 % Loads 'airfoils' dataset
-name = 'airfoils';
-plot_flag = 0;
+%name = 'airfoils';
+%plot_flag = 0;
 % Loads 
 load(strcat('dataset_',name,'.mat'));
 
@@ -34,7 +34,6 @@ type = 'nu';                                    % 'C', 'nu'
 C = 1.13;
 param = 0.057;                                   % param = epsilon or nu depending on the type
 % Calls SVR
-
 model = generate_SVR(type, kernel, C, param, 'SVR');
 model = train_model(Dataset,model,plot_flag);
 
