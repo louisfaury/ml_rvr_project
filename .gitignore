@@ -23,3 +23,7 @@ report/*
 !/report/*.sty
 !/report/Images/
 !/report/Images/*.png
+
+!/prez
+prez/*
+!/prez/*.pdf
